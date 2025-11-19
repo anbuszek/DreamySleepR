@@ -1,16 +1,18 @@
 Package: DreamySleepR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Authors@R: c(
-    person(
-      "Jane", "Doe",
-      email = "jane@example.com",
-      role = c("aut", "cre")
-    )
-  )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Title: DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania 
+snu studentów.
+Version: 0.2.0
+Authors@R:  Anna Buszek
+Description: DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania 
+snu studentów z wykorzystaniem metod FuzzyTOPSIS i  FuzzyMULTIMOORA.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.2.3
+biarch: true
+Depends:
+  R (>= 3.5.0)
+  methods
+Imports:
+  graphics
