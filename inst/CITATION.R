@@ -21,3 +21,4 @@ bibentry("Article",
          doi          = "10.1177/1094428115584005",
          header       = "This package also relies on the Necessary Condition Analysis (NCA) method:"
 )
+
