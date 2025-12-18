@@ -1,8 +1,6 @@
-#' Process Weights for Fuzzy MCDM
-#'
-#' @description Internal helper to handle either explicit fuzzy weights or BWM calculation.
-#' @keywords internal
-.get_final_weights <- function(decision_matrix, weights, bwm_criteria, bwm_best, bwm_worst) {
+# Internal helper: handle explicit fuzzy weights or BWM weights
+.get_final_weights <- function(decision_matrix, weights,
+                               bwm_criteria, bwm_best, bwm_worst) {
 
   n_crit <- ncol(decision_matrix) / 3
 
@@ -13,24 +11,20 @@
     return(weights)
   }
 
-  # Calculate using BWM if weights are missing
   if (!missing(bwm_criteria) && !missing(bwm_best) && !missing(bwm_worst)) {
-    message("Weights not provided. Calculating using BWM...")
     bwm_res <- calculate_bwm_weights(bwm_criteria, bwm_best, bwm_worst)
-
     crisp_w <- bwm_res$criteriaWeights
 
     if (length(crisp_w) != n_crit) {
-      stop("Calculated BWM weights do not match the number of criteria in decision matrix.")
+      stop("Calculated BWM weights do not match number of criteria.")
     }
 
-    # Convert crisp BWM weights to Triangular Fuzzy Number (w, w, w)
-    fuzzy_weights <- rep(crisp_w, each = 3)
-    return(fuzzy_weights)
+    return(rep(crisp_w, each = 3))
   }
 
-  stop("You must provide either 'weights' vector OR 'bwm_criteria', 'bwm_best', and 'bwm_worst'.")
+  stop("Provide either 'weights' or BWM parameters.")
 }
+
 
 #' Fuzzy VIKOR Method
 #'

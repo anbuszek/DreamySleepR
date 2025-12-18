@@ -2,8 +2,8 @@ Package: DreamySleepR
 Type: Package
 Title: DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania snu studentów
 Version: 0.2.0
-Authors@R: 
-    person("Anna", "Buszek", role = c("aut", "cre"))
+Authors@R:
+    person("Anna", "Buszek", email = "an.buszek@email.com", role = c("aut", "cre"))
 Description: Pakiet R do oceny i rankingu aplikacji do monitorowania snu studentów
     z wykorzystaniem metod Fuzzy TOPSIS i Fuzzy MULTIMOORA.
 License: MIT + file LICENSE
@@ -11,7 +11,6 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
 Depends:
-    R (>= 3.5.0),
-    methods
+    R (>= 3.5.0)
 Imports:
     graphics
