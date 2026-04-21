@@ -2,7 +2,7 @@
 % Please edit documentation in R/wizualizacja.R
 \name{plot.rozmyty_topsis_wynik}
 \alias{plot.rozmyty_topsis_wynik}
-\title{Mapa Efektywności TOPSIS}
+\title{Mapa efektywnosci TOPSIS}
 \usage{
 \method{plot}{rozmyty_topsis_wynik}(x, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{Dodatkowe argumenty.}
 }
 \description{
-Pokazuje odległość od ideału. Oś X: Dystans od Najgorszego (D-).
-Oś Y: Dystans do Najlepszego (D+).
-Cel: Chcemy być w prawym dolnym rogu (Daleko od D-, Blisko D+).
+Pokazuje odleglosc od rozwiazania idealnego.
+Os X: dystans od antywzorca (D-).
+Os Y: dystans do wzorca (D+).
 }

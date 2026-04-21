@@ -33,7 +33,7 @@ Pakiet **DreamySleepR** oferuje:
 Pakiet można zainstalować bezpośrednio z GitHuba:
 ```r
 # install.packages("devtools")
-devtools::install_github("anbuszek/MCDAProject")
+devtools::install_github("anbuszek/DreamySleepR")
 ``` 
 ## Szybki Start
 

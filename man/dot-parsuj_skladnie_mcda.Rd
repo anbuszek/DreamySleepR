@@ -2,12 +2,20 @@
 % Please edit documentation in R/przygotowanie_danych.R
 \name{.parsuj_skladnie_mcda}
 \alias{.parsuj_skladnie_mcda}
-\title{Wewnętrzny parser składni}
+\title{Parsowanie składni MCDA}
 \usage{
 .parsuj_skladnie_mcda(skladnia)
 }
+\arguments{
+\item{skladnia}{Ciąg znaków opisujący składnię modelu MCDA.}
+}
+\value{
+Lista, w której nazwy elementów odpowiadają kryteriom,
+a wartości są wektorami nazw zmiennych przypisanych do danego kryterium.
+}
 \description{
-Funkcja pomocnicza do interpretowania modelu (stringa) podanego przez użytkownika.
-Zamienia tekst "Kryterium =~ zmienna1 + zmienna2" na listę w R.
+Funkcja pomocnicza interpretująca model zapisany jako ciąg znaków
+w postaci np. `"Kryterium =~ zmienna1 + zmienna2"`.
+Zwraca listę mapującą nazwy kryteriów na odpowiadające im zmienne.
 }
 \keyword{internal}

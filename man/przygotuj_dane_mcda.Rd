@@ -2,7 +2,7 @@
 % Please edit documentation in R/przygotowanie_danych.R
 \name{przygotuj_dane_mcda}
 \alias{przygotuj_dane_mcda}
-\title{Przygotowanie Danych do Rozmytej Analizy MCDA}
+\title{Przygotowanie danych do rozmytej analizy MCDA}
 \usage{
 przygotuj_dane_mcda(
   dane,
@@ -12,20 +12,24 @@ przygotuj_dane_mcda(
 )
 }
 \arguments{
-\item{dane}{Ramka danych (data frame) zawierająca surowe zmienne.}
+\item{dane}{Ramka danych zawierająca surowe zmienne.}
 
-\item{skladnia}{Ciąg znaków definiujący kryteria (np. "Koszt =~ k1 + k2").}
+\item{skladnia}{Ciąg znaków definiujący kryteria,
+np. `"Koszt =~ k1 + k2; Użyteczność =~ u1 + u2"`.}
 
 \item{kolumna_alternatyw}{Nazwa kolumny identyfikującej alternatywy.
-Jeśli NULL, każdy wiersz traktowany jest jako osobna alternatywa.}
+Jeśli `NULL`, każdy wiersz traktowany jest jako osobna alternatywa.}
 
-\item{funkcja_agregacji}{Funkcja używana do scalania opinii ekspertów (domyślnie: mean).}
+\item{funkcja_agregacji}{Funkcja używana do agregacji opinii ekspertów.
+Domyślnie `mean`.}
 }
 \value{
-Macierz o wymiarach ($m \times 3n$), gdzie m to liczba alternatyw.
+Macierz o wymiarach `m x 3n`, gdzie `m` oznacza liczbę alternatyw,
+a `n` liczbę kryteriów.
 }
 \description{
 Funkcja przekształca surowe dane ankietowe w rozmytą macierz decyzyjną.
-Oblicza wyniki zmiennych kompozytowych na podstawie składni, skaluje je do przedziału 1-9,
-agreguje odpowiedzi ekspertów (jeśli dotyczy) i dokonuje rozmycia (fuzzification).
+Oblicza wyniki zmiennych kompozytowych na podstawie składni,
+skaluje je do przedziału 1-9, agreguje odpowiedzi ekspertów
+i dokonuje fuzzification.
 }

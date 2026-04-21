@@ -1,274 +1,178 @@
-#' @title Wewnętrzny parser składni
-
-#' @description Funkcja pomocnicza do interpretowania modelu (stringa) podanego przez użytkownika.
-
-#' Zamienia tekst "Kryterium =~ zmienna1 + zmienna2" na listę w R.
-
+#' Parsowanie składni MCDA
+#'
+#' Funkcja pomocnicza interpretująca model zapisany jako ciąg znaków
+#' w postaci np. `"Kryterium =~ zmienna1 + zmienna2"`.
+#' Zwraca listę mapującą nazwy kryteriów na odpowiadające im zmienne.
+#'
+#' @param skladnia Ciąg znaków opisujący składnię modelu MCDA.
+#'
+#' @return Lista, w której nazwy elementów odpowiadają kryteriom,
+#' a wartości są wektorami nazw zmiennych przypisanych do danego kryterium.
+#'
 #' @keywords internal
-
 .parsuj_skladnie_mcda <- function(skladnia) {
-
-  # Usuwamy znaki nowej linii
-
   czysta_skladnia <- gsub("\n", "", skladnia)
-
-  # Dzielimy na linie po sredniku
-
   linie <- strsplit(czysta_skladnia, ";")[[1]]
-
   mapowanie <- list()
-
-
+  
   for (linia in linie) {
-
-    if (trimws(linia) == "") next # Pomin puste linie
-
-    # Dzielimy wg operatora "=~"
-
+    if (trimws(linia) == "") {
+      next
+    }
+    
     czesci <- strsplit(linia, "=~")[[1]]
-
+    
     if (length(czesci) == 2) {
-
       nazwa_kryterium <- trimws(czesci[1])
-
-      # Dzielimy zmienne skladowe wg "+"
-
       elementy <- trimws(strsplit(czesci[2], "\\+")[[1]])
-
       mapowanie[[nazwa_kryterium]] <- elementy
-
     }
-
   }
-
+  
   return(mapowanie)
-
 }
 
 
-#' @title Wewnętrzny Skaler Saaty'ego
-
-#' @description Przekształca dowolną skalę (np. Likert 1-5, wartości ciągłe)
-
-#' na skalę Saaty'ego 1-9.
-
+#' Wewnętrzny skaler Saaty'ego
+#'
+#' Przekształca dowolną skalę, np. Likert 1-5 lub wartości ciągłe,
+#' do skali Saaty'ego 1-9.
+#'
+#' @param wektor Wektor numeryczny.
+#'
+#' @return Wektor numeryczny przeskalowany do przedziału 1-9.
+#'
 #' @keywords internal
-
 .skaluj_do_saaty <- function(wektor) {
-
-  # Zabezpieczenie przed ujemnymi (chyba ze to specyfika danych, tu zakladamy blad)
-
-  if (any(wektor < 0, na.rm = TRUE)) stop("Wykryto wartości ujemne w danych wejściowych.")
-
-
-  # Obsluga kodow bledow (np. 99) i brakow danych (NA) -> zamiana na 0
-
+  if (any(wektor < 0, na.rm = TRUE)) {
+    stop("Wykryto wartości ujemne w danych wejściowych.")
+  }
+  
   wektor[is.na(wektor) | wektor == 99] <- 0
-
-
-  # Maska dla poprawnych wartosci (wiekszych od 0)
-
+  
   maska_poprawne <- wektor > 0
-
   wartosci <- wektor[maska_poprawne]
-
-
-  # Jesli same zera, zwroc wektor
-
-  if (length(wartosci) == 0) return(wektor)
-
-
+  
+  if (length(wartosci) == 0) {
+    return(wektor)
+  }
+  
   min_v <- min(wartosci)
-
   max_v <- max(wartosci)
-
-
-  # Skalowanie liniowe do przedzialu [1, 9]
-
+  
   if (min_v == max_v) {
-
     wektor[maska_poprawne] <- 1
-
   } else {
-
-    # Wzor: 1 + (x - min) * (8 / (max - min))
-
     wektor[maska_poprawne] <- 1 + (wartosci - min_v) * (8 / (max_v - min_v))
-
   }
-
+  
   return(wektor)
-
 }
 
 
-#' @title Wewnętrzna funkcja rozmywająca (Fuzzifier)
-
-#' @description Zamienia liczbę rzeczywistą (Crisp) na Trójkątną Liczbę Rozmytą (TFN).
-
-#' TFN to trójka (l, m, u), gdzie m = x, l = x-1, u = x+1.
-
+#' Wewnętrzna funkcja rozmywiająca
+#'
+#' Zamienia liczbę rzeczywistą na trójkątną liczbę rozmytą (TFN).
+#' Dla wartości `x` tworzona jest trójka `(l, m, u)`, gdzie:
+#' `l = x - 1`, `m = x`, `u = x + 1`,
+#' z ograniczeniem do przedziału 1-9.
+#'
+#' @param wektor Wektor numeryczny.
+#'
+#' @return Macierz trójkolumnowa zawierająca wartości `l`, `m`, `u`.
+#'
 #' @keywords internal
-
 .rozmyj_wektor <- function(wektor) {
-
-  # Dolna granica (lower), min to 1
-
   l <- pmax(1, wektor - 1)
-
-  # Srodek (middle)
-
   m <- wektor
-
-  # Gorna granica (upper), max to 9
-
   u <- pmin(9, wektor + 1)
-
-
-  # Obsluga zer (brakow danych) - pozostają zerami
-
-  jest_zerem <- (wektor == 0)
-
-  l[jest_zerem] <- 0; m[jest_zerem] <- 0; u[jest_zerem] <- 0
-
-
+  
+  jest_zerem <- wektor == 0
+  l[jest_zerem] <- 0
+  m[jest_zerem] <- 0
+  u[jest_zerem] <- 0
+  
   return(cbind(l, m, u))
-
 }
 
 
-#' Przygotowanie Danych do Rozmytej Analizy MCDA
-
+#' Przygotowanie danych do rozmytej analizy MCDA
 #'
-
-#' @description Funkcja przekształca surowe dane ankietowe w rozmytą macierz decyzyjną.
-
-#' Oblicza wyniki zmiennych kompozytowych na podstawie składni, skaluje je do przedziału 1-9,
-
-#' agreguje odpowiedzi ekspertów (jeśli dotyczy) i dokonuje rozmycia (fuzzification).
-
+#' Funkcja przekształca surowe dane ankietowe w rozmytą macierz decyzyjną.
+#' Oblicza wyniki zmiennych kompozytowych na podstawie składni,
+#' skaluje je do przedziału 1-9, agreguje odpowiedzi ekspertów
+#' i dokonuje fuzzification.
 #'
-
-#' @param dane Ramka danych (data frame) zawierająca surowe zmienne.
-
-#' @param skladnia Ciąg znaków definiujący kryteria (np. "Koszt =~ k1 + k2").
-
+#' @param dane Ramka danych zawierająca surowe zmienne.
+#' @param skladnia Ciąg znaków definiujący kryteria,
+#' np. `"Koszt =~ k1 + k2; Użyteczność =~ u1 + u2"`.
 #' @param kolumna_alternatyw Nazwa kolumny identyfikującej alternatywy.
-
-#' Jeśli NULL, każdy wiersz traktowany jest jako osobna alternatywa.
-
-#' @param funkcja_agregacji Funkcja używana do scalania opinii ekspertów (domyślnie: mean).
-
-#' @return Macierz o wymiarach ($m \times 3n$), gdzie m to liczba alternatyw.
-
+#' Jeśli `NULL`, każdy wiersz traktowany jest jako osobna alternatywa.
+#' @param funkcja_agregacji Funkcja używana do agregacji opinii ekspertów.
+#' Domyślnie `mean`.
+#'
+#' @return Macierz o wymiarach `m x 3n`, gdzie `m` oznacza liczbę alternatyw,
+#' a `n` liczbę kryteriów.
+#'
 #' @export
-
 przygotuj_dane_mcda <- function(dane, skladnia, kolumna_alternatyw = NULL, funkcja_agregacji = mean) {
-
-
-  if (!is.data.frame(dane)) stop("Argument 'dane' musi być ramką danych (data frame).")
-
-
-  # 1. Parsowanie składni
-
+  if (!is.data.frame(dane)) {
+    stop("Argument 'dane' musi być ramką danych (data frame).")
+  }
+  
   mapowanie <- .parsuj_skladnie_mcda(skladnia)
-
   nazwy_kryteriow <- names(mapowanie)
-
-
-  # 2. Obliczanie zmiennych kompozytowych i skalowanie (dla każdego wiersza/eksperta)
-
-  tymczasowe_wyniki <- data.frame(row_id = 1:nrow(dane))
-
-
+  
+  tymczasowe_wyniki <- data.frame(row_id = seq_len(nrow(dane)))
+  
   for (kryt in nazwy_kryteriow) {
-
     zmienne <- mapowanie[[kryt]]
-
-    # Sprawdzenie czy zmienne istnieja w danych
-
     brakujace <- zmienne[!zmienne %in% names(dane)]
-
-    if (length(brakujace) > 0) stop(paste("Brakuje zmiennych w danych:", paste(brakujace, collapse=", ")))
-
-
-    # Obliczanie sredniej dla kryterium (Composite Score)
-
-    if (length(zmienne) > 1) {
-
-      surowy_wynik <- rowMeans(dane[, zmienne, drop = FALSE], na.rm = TRUE)
-
-    } else {
-
-      surowy_wynik <- dane[[zmienne]]
-
+    
+    if (length(brakujace) > 0) {
+      stop(paste("Brakuje zmiennych w danych:", paste(brakujace, collapse = ", ")))
     }
-
-
-    # Skalowanie do 1-9
-
+    
+    if (length(zmienne) > 1) {
+      surowy_wynik <- rowMeans(dane[, zmienne, drop = FALSE], na.rm = TRUE)
+    } else {
+      surowy_wynik <- dane[[zmienne]]
+    }
+    
     tymczasowe_wyniki[[kryt]] <- .skaluj_do_saaty(surowy_wynik)
-
   }
-
-
-  # 3. Agregacja (Eksperci -> Alternatywy)
-
+  
   if (!is.null(kolumna_alternatyw)) {
-
-    if (!kolumna_alternatyw %in% names(dane)) stop("Nie znaleziono kolumny alternatyw w danych.")
-
-
+    if (!kolumna_alternatyw %in% names(dane)) {
+      stop("Nie znaleziono kolumny alternatyw w danych.")
+    }
+    
     tymczasowe_wyniki$ID_Alternatywy <- dane[[kolumna_alternatyw]]
-
-
-    # Agregacja wg ID Alternatywy (np. srednia z ocen 5 ekspertow dla danego dostawcy)
-
-    dane_zagregowane <- aggregate(. ~ ID_Alternatywy, data = tymczasowe_wyniki[, -1], FUN = funkcja_agregacji)
-
-
-    # Sortowanie i czyszczenie
-
+    
+    dane_zagregowane <- aggregate(
+      . ~ ID_Alternatywy,
+      data = tymczasowe_wyniki[, -1, drop = FALSE],
+      FUN = funkcja_agregacji
+    )
+    
     dane_zagregowane <- dane_zagregowane[order(dane_zagregowane$ID_Alternatywy), ]
-
     nazwy_wierszy <- dane_zagregowane$ID_Alternatywy
-
-    macierz_wynikow <- as.matrix(dane_zagregowane[, nazwy_kryteriow])
-
-
+    macierz_wynikow <- as.matrix(dane_zagregowane[, nazwy_kryteriow, drop = FALSE])
   } else {
-
-    # Brak agregacji (1 wiersz = 1 alternatywa)
-
-    macierz_wynikow <- as.matrix(tymczasowe_wyniki[, nazwy_kryteriow])
-
-    nazwy_wierszy <- 1:nrow(macierz_wynikow)
-
+    macierz_wynikow <- as.matrix(tymczasowe_wyniki[, nazwy_kryteriow, drop = FALSE])
+    nazwy_wierszy <- seq_len(nrow(macierz_wynikow))
   }
-
-
-  # 4. Rozmywanie (Crisp -> Fuzzy Triangular)
-
+  
   lista_decyzyjna <- list()
-
+  
   for (i in seq_along(nazwy_kryteriow)) {
-
     kryt <- nazwy_kryteriow[i]
-
     lista_decyzyjna[[kryt]] <- .rozmyj_wektor(macierz_wynikow[, i])
-
   }
-
-
+  
   finalna_macierz <- do.call(cbind, lista_decyzyjna)
-
   rownames(finalna_macierz) <- nazwy_wierszy
-
-  # Zapisujemy metadane (nazwy kryteriow) jako atrybut macierzy
-
   attr(finalna_macierz, "nazwy_kryteriow") <- nazwy_kryteriow
-
-
+  
   return(finalna_macierz)
-
 }

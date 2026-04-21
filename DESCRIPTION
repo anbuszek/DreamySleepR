@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Anna Buszek <an.buszek@student.uj.edu.pl>
 Maintainer: Anna Buszek <an.buszek@student.uj.edu.pl>
 Description: Pakiet implementuje metody wielokryterialnej analizy decyzyjnej (MCDA),
-    takie jak Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy WASPAS, w srodowisku rozmytym
+    takie jak Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy Multimoora, w srodowisku rozmytym
     (Fuzzy Logic). Pakiet zawiera modul automatycznego przetwarzania danych
     ankietowych na trojkatne liczby rozmyte (TFN) oraz solver metody
     Best-Worst Method (BWM) do wyznaczania wag kryteriow. Narzedzie sluzy

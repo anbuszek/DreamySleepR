@@ -2,17 +2,18 @@
 % Please edit documentation in R/wizualizacja.R
 \name{plot.rozmyty_vikor_wynik}
 \alias{plot.rozmyty_vikor_wynik}
-\title{Mapa Strategiczna VIKOR}
+\title{Mapa strategiczna VIKOR}
 \usage{
 \method{plot}{rozmyty_vikor_wynik}(x, ...)
 }
 \arguments{
 \item{x}{Obiekt klasy `rozmyty_vikor_wynik`.}
 
-\item{...}{Dodatkowe argumenty (ignorowane).}
+\item{...}{Dodatkowe argumenty.}
 }
 \description{
 Wizualizacja typu cIPMA.
-Oś X: Efektywność grupowa (odwrócone S). Oś Y: Ryzyko/Żal (R).
-Wielkość bąbla: Siła kompromisu (zależna od Q).
+Os X: efektywnosc grupowa (odwrocone S).
+Os Y: ryzyko / zal (R).
+Wielkosc bąbla: sila kompromisu zależna od Q.
 }

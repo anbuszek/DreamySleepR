@@ -2,37 +2,61 @@
 % Please edit documentation in R/meta_ranking.R
 \name{rozmyty_meta_ranking}
 \alias{rozmyty_meta_ranking}
-\title{Rozmyty Meta-Ranking}
+\title{Rozmyty meta-ranking alternatyw}
 \usage{
 rozmyty_meta_ranking(
   macierz_decyzyjna,
   typy_kryteriow,
   wagi = NULL,
+  bwm_kryteria = NULL,
   bwm_najlepsze = NULL,
   bwm_najgorsze = NULL,
-  lambda = 0.5,
   v = 0.5
 )
 }
 \arguments{
-\item{macierz_decyzyjna}{Rozmyta macierz danych.}
+\item{macierz_decyzyjna}{Rozmyta macierz decyzyjna zawierająca oceny
+alternatyw względem kryteriów.}
 
-\item{typy_kryteriow}{Wektor typów ("min", "max").}
+\item{typy_kryteriow}{Wektor znakowy określający typ kryteriów:
+\code{"min"} dla kryteriów kosztowych i \code{"max"} dla kryteriów
+zyskowych.}
 
-\item{wagi}{(Opcjonalnie) Wagi kryteriów.}
+\item{wagi}{Opcjonalny wektor wag kryteriów.}
 
-\item{bwm_najlepsze}{(Opcjonalnie) Wektor BWM Best-to-Others.}
+\item{bwm_kryteria}{Opcjonalny wektor nazw kryteriów dla metody BWM.}
 
-\item{bwm_najgorsze}{(Opcjonalnie) Wektor BWM Others-to-Worst.}
+\item{bwm_najlepsze}{Opcjonalny wektor porównań Best-to-Others dla metody BWM.}
 
-\item{lambda}{Parametr dla WASPAS (domyślnie 0.5).}
+\item{bwm_najgorsze}{Opcjonalny wektor porównań Others-to-Worst dla metody BWM.}
 
-\item{v}{Parametr dla VIKOR (domyślnie 0.5).}
+\item{v}{Parametr metody VIKOR z zakresu od 0 do 1. Domyślnie \code{0.5}.}
 }
 \value{
-Lista zawierająca ramkę danych z porównaniem rankingów oraz macierz korelacji.
+Lista zawierająca dwa elementy:
+\describe{
+  \item{porownanie}{Ramka danych z rankingami cząstkowymi metod
+  Fuzzy VIKOR, Fuzzy TOPSIS i Fuzzy MULTIMOORA oraz rankingami
+  zagregowanymi.}
+  \item{korelacje}{Macierz korelacji rang Spearmana pomiędzy rankingami
+  cząstkowymi i zagregowanymi.}
+}
 }
 \description{
-Agreguje wyniki z metod Fuzzy VIKOR, TOPSIS i WASPAS, aby stworzyć
-jeden, robustny ranking konsensusu.
+Funkcja agreguje wyniki metod \emph{Fuzzy VIKOR}, \emph{Fuzzy TOPSIS}
+oraz \emph{Fuzzy MULTIMOORA}, tworząc końcowy ranking konsensusu
+alternatyw.
+}
+\details{
+Funkcja najpierw ustala wagi kryteriów. Jeśli użytkownik nie poda wag
+ani parametrów BWM, wagi są wyznaczane metodą entropii. Następnie
+uruchamiane są trzy metody: \code{rozmyty_vikor()},
+\code{rozmyty_topsis()} oraz \code{rozmyty_multimoora()}.
+
+Rangi alternatyw są agregowane trzema sposobami:
+\enumerate{
+  \item ranking oparty na sumie rang cząstkowych,
+  \item ranking wyznaczany zgodnie z teorią dominacji,
+  \item ranking konsensusu wyznaczany z użyciem pakietu \pkg{RankAggreg}.
+}
 }

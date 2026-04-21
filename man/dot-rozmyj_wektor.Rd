@@ -2,12 +2,20 @@
 % Please edit documentation in R/przygotowanie_danych.R
 \name{.rozmyj_wektor}
 \alias{.rozmyj_wektor}
-\title{Wewnętrzna funkcja rozmywająca (Fuzzifier)}
+\title{Wewnętrzna funkcja rozmywiająca}
 \usage{
 .rozmyj_wektor(wektor)
 }
+\arguments{
+\item{wektor}{Wektor numeryczny.}
+}
+\value{
+Macierz trójkolumnowa zawierająca wartości `l`, `m`, `u`.
+}
 \description{
-Zamienia liczbę rzeczywistą (Crisp) na Trójkątną Liczbę Rozmytą (TFN).
-TFN to trójka (l, m, u), gdzie m = x, l = x-1, u = x+1.
+Zamienia liczbę rzeczywistą na trójkątną liczbę rozmytą (TFN).
+Dla wartości `x` tworzona jest trójka `(l, m, u)`, gdzie:
+`l = x - 1`, `m = x`, `u = x + 1`,
+z ograniczeniem do przedziału 1-9.
 }
 \keyword{internal}

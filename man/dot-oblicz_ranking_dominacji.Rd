@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta_ranking.R
 \name{.oblicz_ranking_dominacji}
 \alias{.oblicz_ranking_dominacji}
-\title{Teoria Dominacji dla Rankingu}
+\title{Teoria dominacji dla rankingu}
 \usage{
 .oblicz_ranking_dominacji(r1, r2, r3)
 }
@@ -14,10 +14,11 @@
 \item{r3}{Wektor numeryczny rang metody 3.}
 }
 \value{
-Wektor numeryczny z finalnym rankingiem.
+Wektor numeryczny zawierający końcowy ranking alternatyw.
 }
 \description{
-Funkcja pomocnicza. Wyznacza ranking konsensusu na podstawie reguły większości.
-Iteracyjnie sprawdza, która alternatywa najczęściej wygrywa na danej pozycji.
+Funkcja pomocnicza wyznaczająca ranking konsensusu na podstawie reguły
+większości. Iteracyjnie sprawdza, która alternatywa najczęściej wygrywa
+na danej pozycji w rankingach cząstkowych.
 }
 \keyword{internal}

@@ -7,9 +7,9 @@
 
 Pakiet stanowi narzędzie badawcze opracowane na potrzeby pracy licencjackiej pt.:
 
-**„DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania snu studentów z wykorzystaniem metod FuzzyTOPSIS i FuzzyMULTIMOORA.”**
+**„DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania snu studentów z wykorzystaniem metod Fuzzy TOPSIS, Fuzzy VIKOR i Fuzzy MULTIMOORA.”**
 
-Umożliwia on pełną ścieżkę analityczną: od danych eksperckich, przez ich agregację w postaci rozmytej, aż po wyznaczenie rankingów metodami **FuzzyTOPSISLinear**, **FuzzyMULTIMOORA** oraz ich **meta-ranking (konsensus)**.
+Umożliwia on pełną ścieżkę analityczną: od danych eksperckich, przez ich agregację w postaci rozmytej, aż po wyznaczenie rankingów metodami **Fuzzy TOPSIS**, **Fuzzy VIKOR**, **Fuzzy MULTIMOORA** oraz ich **meta-rankingu (konsensusu)**.
 
 ---
 
@@ -17,35 +17,38 @@ Umożliwia on pełną ścieżkę analityczną: od danych eksperckich, przez ich 
 
 Pakiet **DreamySleepR** oferuje:
 
-- przygotowanie i agregację **rozmytych ocen ekspertów** (np. 15 ekspertów)
-- obsługę danych symulowanych (dummy variables) dla:
+- przygotowanie i agregację **rozmytych ocen ekspertów**
+- obsługę danych symulowanych dla:
   - 3 alternatyw (aplikacje do monitorowania snu)
   - 5 kryteriów oceny
-- **FuzzyTOPSISLinear** – ranking alternatyw w środowisku rozmytym
-- **FuzzyMULTIMOORA** – ranking alternatyw metodą MULTIMOORA w ujęciu rozmytym
+  - 15 ekspertów
+- wyznaczanie wag kryteriów metodą **entropii**
+- możliwość wykorzystania wag wyznaczonych metodą **BWM**
+- **rozmyty_topsis()** – ranking alternatyw metodą Fuzzy TOPSIS
+- **rozmyty_vikor()** – ranking alternatyw metodą Fuzzy VIKOR
+- **rozmyty_multimoora()** – ranking alternatyw metodą Fuzzy MULTIMOORA
+- **rozmyty_meta_ranking()** – agregację wyników wielu metod w jeden ranking konsensusu
+- **tabela_apa()** – generowanie tabel gotowych do raportowania
 - **wizualizację wyników** rankingów i porównań
-- **meta-ranking** – agregację wyników wielu metod w jeden ranking konsensusu
 
 ---
 
 ## Instalacja
 
 Pakiet można zainstalować bezpośrednio z GitHuba:
+
 ```r
 # install.packages("devtools")
-devtools::install_github("anbuszek/DreamySleepR")
+devtools::install_github("anbuszek/DreamySleepR") 
 ``` 
 ## Szybki Start
 
 Poniżej znajduje się podstawowy przykład użycia pakietu na danych symulowanych zgodnych z założeniami pracy:
 
-3 alternatywy (aplikacje do snu)
+- 3 alternatywy
+- 5 kryteriów
+- 15 ekspertów
 
-5 kryteriów
-
-15 ekspertów
-{r example}
-library(DreamySleepR)
 ```r
 library(DreamySleepR)
 
@@ -53,7 +56,7 @@ library(DreamySleepR)
 data("mcda_dane_surowe")
 head(mcda_dane_surowe, 3)
 
-# 2. Zdefiniuj składnię MCDA
+# 2. Zdefiniuj skladnie danych
 skladnia <- list(
   alternative = "App",
   expert = "Expert",
@@ -66,7 +69,7 @@ skladnia <- list(
   )
 )
 
-# 3. Przygotuj dane MCDA (ZGODNIE Z TWOJĄ FUNKCJĄ)
+# 3. Przygotuj rozmyta macierz decyzyjna
 macierz <- przygotuj_dane_mcda(
   dane = mcda_dane_surowe,
   skladnia = skladnia,
@@ -74,18 +77,47 @@ macierz <- przygotuj_dane_mcda(
   funkcja_agregacji = mean
 )
 
-# 4. Ranking metodą Fuzzy VIKOR
-wynik_vikor <- fuzzy_vikor(
-  macierz,
-  criteria_types = c("max", "max", "max", "max", "max")
+# 4. Okresl typy kryteriow
+typy_kryteriow <- c("max", "max", "max", "max", "max")
+
+# 5. Wyznacz wagi kryteriow metoda entropii
+wagi <- oblicz_wagi_entropii(macierz)
+
+# 6. Uruchom metody rankingowe
+wynik_topsis <- rozmyty_topsis(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  wagi = wagi
 )
 
-# 5. Wyświetl wyniki
-print(wynik_vikor$results)
+wynik_vikor <- rozmyty_vikor(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  wagi = wagi
+)
+
+wynik_multimoora <- rozmyty_multimoora(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  wagi = wagi
+)
+
+# 7. Meta-ranking
+wynik_meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  wagi = wagi
+)
+
+# 8. Wyswietl wyniki
+wynik_topsis$wyniki
+wynik_vikor$wyniki
+wynik_multimoora$wyniki
+wynik_meta$porownanie 
 ```
 ## Wizualizacja
 
-Pakiet umożliwia graficzną analizę wyników rankingu:
+Pakiet umożliwia graficzną analizę wyników rankingu, na przykład dla metody TOPSIS:
 ```r
 # Wizualizacja wyników (mapa decyzyjna)
 plot(wynik_topsis)
@@ -94,15 +126,23 @@ plot(wynik_topsis)
 
 Wyniki z różnych metod można połączyć w ranking konsensusu, zwiększający stabilność decyzji:
 ```r
-meta <- fuzzy_meta_ranking(
-  results_list = list(
-    TOPSIS = wynik_topsis,
-    MULTIMOORA = wynik_multimoora
-  ),
-  method = "borda"
+wynik_meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  wagi = wagi
 )
 
-print(meta$ranking)
+wynik_meta$porownanie
+wynik_meta$korelacje
+```
+## Raportowanie wyników
+
+Pakiet pozwala przygotować tabele zgodne ze stylem APA:
+```r
+tabela_apa(wynik_topsis)
+tabela_apa(wynik_vikor)
+tabela_apa(wynik_multimoora)
+tabela_apa(wynik_meta)
 ```
 ## Dokumentacja
 
@@ -112,8 +152,14 @@ Vignette:
 vignette("dreamysleepr_guide", package = "DreamySleepR")
 
 Pomoc dla funkcji:
-?fuzzy_topsis_linear, ?fuzzy_multimoora, ?fuzzy_meta_ranking
-
+```r
+?rozmyty_topsis
+?rozmyty_vikor
+?rozmyty_multimoora
+?rozmyty_meta_ranking
+?oblicz_wagi_entropii
+?tabela_apa
+```
 ## Autor
 
 Anna Buszek

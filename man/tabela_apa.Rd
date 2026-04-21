@@ -2,19 +2,20 @@
 % Please edit documentation in R/tabela_apa.R
 \name{tabela_apa}
 \alias{tabela_apa}
-\title{Generowanie Tabeli APA}
+\title{Generowanie tabeli APA}
 \usage{
 tabela_apa(x, tytul = NULL)
 }
 \arguments{
-\item{x}{Obiekt wynikowy z funkcji pakietu (np. `rozmyty_topsis_wynik`).}
+\item{x}{Obiekt wynikowy z funkcji pakietu.}
 
-\item{tytul}{Opcjonalny tytuł tabeli.}
+\item{tytul}{Opcjonalny tytul tabeli.}
 }
 \value{
-Obiekt klasy `flextable` gotowy do druku lub zapisu do Worda.
+Obiekt klasy `flextable`.
 }
 \description{
-Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, WASPAS, Meta-Ranking)
-w sformatowaną tabelę zgodną ze standardem APA, gotową do publikacji w Wordzie.
+Funkcja przeksztalca wyniki analizy MCDA
+(TOPSIS, VIKOR, MULTIMOORA, meta-ranking)
+w sformatowana tabele zgodna ze standardem APA.
 }
