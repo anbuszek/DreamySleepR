@@ -4,39 +4,89 @@
 \alias{mcda_dane_surowe}
 \title{Surowe dane do macierzy decyzyjnej MCDA – aplikacje do monitorowania snu}
 \format{
-Ramka danych (data frame) z 45 wierszami i 10 zmiennymi:
+Ramka danych (data frame) z 18 wierszami i 10 zmiennymi:
 \describe{
-  \item{EkspertID}{Identyfikator eksperta oceniającego aplikacje (1–15).}
-  \item{Aplikacja}{Nazwa aplikacji do monitorowania snu (alternatywa decyzyjna).}
-  \item{dokladnosc_faz_snu}{Ocena dokładności monitorowania faz snu
-  (skala Likerta 1–5).}
-  \item{analiza_statystyk}{Ocena przejrzystości i zakresu analiz statystycznych
-  snu (skala Likerta 1–5).}
-  \item{ux_latwosc}{Ocena łatwości obsługi i intuicyjności interfejsu
-  użytkownika (skala Likerta 1–5).}
-  \item{dane_fizjologiczne}{Ocena zakresu zbieranych danych fizjologicznych
-  (np. tętno, oddech, regeneracja) w skali Likerta 1–5.}
-  \item{integracja_urzadzenia}{Ocena integracji aplikacji z urządzeniami
-  zewnętrznymi (smartwatch, opaska, telefon) w skali Likerta 1–5.}
-  \item{funkcje_dodatkowe}{Ocena dostępności funkcji dodatkowych
-  (np. inteligentny budzik, wykrywanie chrapania) w skali Likerta 1–5.}
-  \item{zuzycie_baterii}{Ocena zużycia baterii przez aplikację
-  (skala Likerta 1–5; kryterium typu COST).}
-  \item{cena_subskrypcja}{Ocena ceny lub modelu subskrypcyjnego aplikacji
-  (skala Likerta 1–5; kryterium typu COST).}
+
+  \item{EkspertID}{
+  Identyfikator eksperta oceniającego aplikacje (1–6).
+  }
+
+  \item{Aplikacja}{
+  Nazwa aplikacji do monitorowania snu
+  (alternatywa decyzyjna).
+  }
+
+  \item{dokladnosc_faz_snu}{
+  Ocena dokładności monitorowania faz snu
+  (skala Likerta 1–5).
+  }
+
+  \item{analiza_statystyk}{
+  Ocena przejrzystości i zakresu analiz statystycznych snu
+  (skala Likerta 1–5).
+  }
+
+  \item{ux_latwosc}{
+  Ocena łatwości obsługi i intuicyjności interfejsu użytkownika
+  (skala Likerta 1–5).
+  }
+
+  \item{dane_fizjologiczne}{
+  Ocena zakresu zbieranych danych fizjologicznych
+  (np. tętno, oddech, regeneracja)
+  w skali Likerta 1–5.
+  }
+
+  \item{integracja_urzadzenia}{
+  Ocena integracji aplikacji z urządzeniami zewnętrznymi
+  (smartwatch, opaska, telefon)
+  w skali Likerta 1–5.
+  }
+
+  \item{funkcje_dodatkowe}{
+  Ocena dostępności funkcji dodatkowych
+  (np. inteligentny budzik, wykrywanie chrapania)
+  w skali Likerta 1–5.
+  }
+
+  \item{zuzycie_baterii}{
+  Ocena zużycia baterii przez aplikację
+  (skala Likerta 1–5;
+  kryterium typu COST).
+  }
+
+  \item{cena_subskrypcja}{
+  Ocena ceny lub modelu subskrypcyjnego aplikacji
+  (skala Likerta 1–5;
+  kryterium typu COST).
+  }
 }
+}
+\source{
+Dane wygenerowane syntetycznie na potrzeby pakietu DreamySleepR.
 }
 \usage{
 data(mcda_dane_surowe)
 }
 \description{
-Zbiór danych zawierający symulowane oceny ekspertów (studentów) dla trzech
-aplikacji do monitorowania snu: AutoSleep, Sleep as Android oraz
-Garmin Sleep Advanced. Dane zostały wygenerowane w celu demonstracji
-pełnego procesu wielokryterialnej analizy decyzyjnej (MCDA) w środowisku
-rozmytym.
+Zbiór danych zawierający symulowane oceny ekspertów (studentów)
+dla trzech aplikacji do monitorowania snu:
 }
 \details{
+\itemize{
+  \item AutoSleep
+  \item Sleep as Android
+  \item Garmin Sleep Advanced
+}
+
+Dane zostały wygenerowane w celu demonstracji pełnego procesu
+wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym.
+
 Zbiór przeznaczony do dalszego przetwarzania w pakiecie DreamySleepR
-(skalowanie, rozmywanie TFN, wyznaczanie wag, ranking metodami MCDA).
+(skalowanie, rozmywanie TFN, wyznaczanie wag oraz ranking metodami MCDA).
+
+
+Dane zostały wygenerowane syntetycznie dla celów demonstracyjnych.
+Każdy ekspert ocenia wszystkie trzy aplikacje
+według ośmiu kryteriów decyzyjnych.
 }
