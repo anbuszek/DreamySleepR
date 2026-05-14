@@ -16,6 +16,9 @@
     padding:0;
     box-sizing:border-box;
   }
+  html{
+    scroll-behavior:smooth;
+  }
   
   body{
     font-family:'Inter', sans-serif;
@@ -94,7 +97,17 @@
     font-size:14px;
     font-weight:500;
   }
+  .menu a{
+    color:#374151;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:500;
+    transition:0.2s;
+  }
   
+  .menu a:hover{
+    color:#7c3aed;
+  }
   /* CONTAINER */
   
   .container{
@@ -589,10 +602,15 @@
     </div>
 
     <div class="menu">
-      <span>Problem</span>
-      <span>Dane</span>
-      <span>Wyniki</span>
-      <span>Odtworzenie</span>
+
+      <a href="#problem">Problem</a>
+    
+      <a href="#dane">Dane</a>
+    
+      <a href="#wyniki">Wyniki</a>
+    
+      <a href="#odtworzenie">Odtworzenie</a>
+    
     </div>
 
   </nav>
@@ -605,7 +623,7 @@
 
     <div class="grid">
 
-      <section class="section">
+      <section class="section" id="problem">
 
         <div class="section-label">
           SEKCJA 1
@@ -688,7 +706,7 @@
 
       <!-- DATA -->
 
-      <section class="section">
+      <section class="section" id="dane">
 
         <div class="section-label">
           SEKCJA 2
@@ -1035,7 +1053,7 @@
 
       <!-- META -->
 
-      <section class="section">
+      <section class="section" id="wyniki">
 
         <div class="section-label">
           SEKCJA 5
@@ -1128,7 +1146,7 @@
 
     <!-- SECTION 6 -->
 
-    <section class="section">
+    <section class="section" id="odtworzenie">
 
       <div class="section-label">
         SEKCJA 6
