@@ -1,5 +1,7 @@
 ---
-output: github_document
+output:
+  github_document:
+    html_preview: false
 ---
 
 ```{r, include = FALSE}
@@ -7,5 +9,162 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  fig.width = 8,
+  fig.height = 5,
+  dpi = 150
 )
+library(DreamySleepR)
+```
+
+# DreamySleepR
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+**DreamySleepR** to pakiet w jezyku R sluzy do oceny i rankingu aplikacji
+do monitorowania snu dla studentow z wykorzystaniem metod wielokryterialnych
+w srodowisku rozmytym (Fuzzy MCDA).
+
+Pakiet stanowi narzedzie badawcze opracowane na potrzeby pracy licencjackiej:
+
+**„DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania snu
+studentow z wykorzystaniem metod Fuzzy TOPSIS, Fuzzy VIKOR i Fuzzy MULTIMOORA."**
+
+Umozliwia on pelna sciezke analityczna: od danych eksperckich, przez ich
+agregacje w postaci rozmytej, az po wyznaczenie rankingow metodami
+**Fuzzy TOPSIS**, **Fuzzy VIKOR**, **Fuzzy MULTIMOORA** oraz ich
+**meta-rankingu (konsensusu)**.
+
+---
+
+## Funkcje pakietu
+
+- przygotowanie i agregacje **rozmytych ocen ekspertow** (TFN)
+- obsluge danych dla 3 alternatyw, 8 kryteriow, 15 ekspertow
+- wyznaczanie wag kryteriow metoda **BWM** (Best-Worst Method)
+- **rozmyty_meta_ranking()** - agregacje wynikow TOPSIS, VIKOR, MULTIMOORA
+- **tabela_apa()** - generowanie tabel gotowych do raportowania
+- **wizualizacje wynikow** rankingow i porownan
+
+---
+
+## Instalacja
+
+```r
+install.packages("devtools")
+devtools::install_github("anbuszek/DreamySleepR")
+```
+
+## Szybki start
+
+```{r}
+library(DreamySleepR)
+data("mcda_dane_surowe")
+
+head(mcda_dane_surowe, 9)
+```
+
+Przygotowanie rozmytej macierzy decyzyjnej:
+
+```{r}
+skladnia <- "
+  Dokladnosc =~ dokladnosc_faz_snu;
+  Analiza =~ analiza_statystyk;
+  UX =~ ux_latwosc;
+  Fizjologia =~ dane_fizjologiczne;
+  Integracja =~ integracja_urzadzenia;
+  Funkcje =~ funkcje_dodatkowe;
+  Bateria =~ zuzycie_baterii;
+  Cena =~ cena_subskrypcja
+"
+
+dane_rozmyte <- przygotuj_dane_mcda(
+  dane = mcda_dane_surowe,
+  skladnia = skladnia,
+  kolumna_alternatyw = "Aplikacja"
+)
+
+dane_rozmyte
+```
+
+Wagi kryteriow metoda BWM:
+
+```{r}
+kryteria <- c(
+  "Dokladnosc", "Analiza", "UX", "Fizjologia",
+  "Integracja", "Funkcje", "Bateria", "Cena"
+)
+
+najlepsze_do_innych <- c(1, 2, 3, 2, 2, 2, 4, 5)
+inne_do_najgorszego <- c(5, 4, 3, 4, 4, 4, 2, 1)
+
+wynik_bwm <- oblicz_wagi_bwm(
+  nazwy_kryteriow = kryteria,
+  najlepsze_do_innych = najlepsze_do_innych,
+  inne_do_najgorszego = inne_do_najgorszego
+)
+
+data.frame(
+  Kryterium = kryteria,
+  Waga = round(wynik_bwm$wagi_kryteriow, 4)
+)
+```
+
+## Meta-ranking
+
+Agregacja wynikow trzech metod w ranking konsensusu:
+
+```{r}
+typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
+
+macierz <- as.matrix(dane_rozmyte)
+
+wynik_meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  bwm_kryteria = kryteria,
+  bwm_najlepsze = najlepsze_do_innych,
+  bwm_najgorsze = inne_do_najgorszego
+)
+
+wynik_meta$porownanie
+```
+
+## Wizualizacja
+
+Wagi BWM:
+
+```{r bwm-plot, fig.width = 8, fig.height = 5}
+DreamySleepR:::.wykres_bwm(wynik_bwm)
+```
+
+Meta-ranking:
+
+```{r meta-plot, fig.width = 8, fig.height = 5}
+plot(wynik_meta)
+```
+
+## Tabele APA
+
+Pakiet generuje tabele zgodne ze stylem APA:
+
+```{r, results = 'asis'}
+tabela_apa(wynik_meta)
+```
+
+## Dokumentacja
+
+Pelna instrukcja krok po kroku:
+
+```r
+vignette("poradnik_mcda", package = "DreamySleepR")
+```
+
+## Autor
+
+Anna Buszek
+
+## Licencja
+
+GPL-3

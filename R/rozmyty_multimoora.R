@@ -45,7 +45,6 @@ rozmyty_multimoora <- function(macierz_decyzyjna,
     stop("`typy_kryteriow` może zawierać wyłącznie 'min' i 'max'.")
   }
   
-  # Wagi
   if (is.null(wagi)) {
     if (!is.null(bwm_najlepsze) && !is.null(bwm_najgorsze)) {
       if (!exists("oblicz_wagi_bwm", mode = "function")) {
@@ -86,19 +85,16 @@ rozmyty_multimoora <- function(macierz_decyzyjna,
   
   wagi <- wagi / sum(wagi)
   
-  # Normalizacja wektorowa
   mianowniki <- sqrt(colSums(macierz_decyzyjna^2, na.rm = TRUE))
   mianowniki[mianowniki == 0] <- 1
   
   macierz_norm <- sweep(macierz_decyzyjna, 2, mianowniki, "/")
   
-  # Ważenie
   macierz_wazona <- sweep(macierz_norm, 2, wagi, "*")
   
   idx_max <- which(typy_kryteriow == "max")
   idx_min <- which(typy_kryteriow == "min")
   
-  # 1. Ratio System
   ratio_benefit <- if (length(idx_max) > 0) {
     rowSums(macierz_wazona[, idx_max, drop = FALSE])
   } else {
@@ -114,7 +110,6 @@ rozmyty_multimoora <- function(macierz_decyzyjna,
   ratio_system <- ratio_benefit - ratio_cost
   ranking_ratio <- rank(-ratio_system, ties.method = "first")
   
-  # 2. Reference Point
   punkt_ref <- numeric(liczba_kryteriow)
   
   for (j in seq_len(liczba_kryteriow)) {
@@ -134,7 +129,6 @@ rozmyty_multimoora <- function(macierz_decyzyjna,
   reference_point <- apply(odchylenia, 1, max)
   ranking_reference <- rank(reference_point, ties.method = "first")
   
-  # 3. Full Multiplicative Form
   eps <- 1e-12
   macierz_log <- log(pmax(macierz_decyzyjna, eps))
   
@@ -153,7 +147,6 @@ rozmyty_multimoora <- function(macierz_decyzyjna,
   full_multiplicative_form <- czesc_benefit - czesc_cost
   ranking_multiplicative <- rank(-full_multiplicative_form, ties.method = "first")
   
-  # Ranking końcowy
   suma_rang <- ranking_ratio + ranking_reference + ranking_multiplicative
   ranking_koncowy <- rank(suma_rang, ties.method = "first")
   

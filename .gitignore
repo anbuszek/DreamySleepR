@@ -4,3 +4,6 @@
 .Ruserdata
 *.Rcheck/
 *.tar.gz
+/doc/
+/Meta/
+/archive/

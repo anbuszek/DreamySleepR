@@ -6,3 +6,8 @@
 ^LICENSE\.md$
 ^doc$
 ^Meta$
+^\.github$
+^tools$
+^index\.html$
+^projekt$
+^archive$

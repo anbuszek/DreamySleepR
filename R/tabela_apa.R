@@ -17,9 +17,6 @@ tabela_apa <- function(x, tytul = NULL) {
 }
 
 
-# ======================
-# TOPSIS
-# ======================
 #' @export
 tabela_apa.rozmyty_topsis_wynik <- function(
     x,
@@ -41,9 +38,6 @@ tabela_apa.rozmyty_topsis_wynik <- function(
 }
 
 
-# ======================
-# VIKOR
-# ======================
 #' @export
 tabela_apa.rozmyty_vikor_wynik <- function(
     x,
@@ -65,9 +59,6 @@ tabela_apa.rozmyty_vikor_wynik <- function(
 }
 
 
-# ======================
-# MULTIMOORA
-# ======================
 #' @export
 tabela_apa.rozmyty_multimoora_wynik <- function(
     x,
@@ -107,9 +98,6 @@ tabela_apa.rozmyty_multimoora_wynik <- function(
 }
 
 
-# ======================
-# META-RANKING
-# ======================
 #' @export
 tabela_apa.rozmyty_meta_ranking_wynik <- function(
     x,

@@ -1,8 +1,8 @@
 ---
-title: "Pełny proces analizy: Od danych do rankingu"
+title: "Pelen proces analizy: Od danych do rankingu"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Pełny proces analizy: Od danych do rankingu}
+  %\VignetteIndexEntry{Pelen proces analizy: Od danych do rankingu}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,8 +10,226 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5,
+  dpi = 150
+)
+library(DreamySleepR)
+```
+
+## Wprowadzenie
+
+Pakiet **DreamySleepR** sluzy do oceny i rankingu aplikacji do monitorowania snu
+z wykorzystaniem metod wielokryterialnej analizy decyzyjnej (MCDA) w srodowisku rozmytym.
+
+Paket implementuje pelna sciezke analityczna: od danych eksperckich, przez
+ich agregacje w postaci rozmytej (trojkatne liczby rozmyte TFN), az po
+wyznaczanie wag metoda Best-Worst Method (BWM) i koncowy meta-ranking
+agregujacy wyniki metod Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy MULTIMOORA.
+
+## Instalacja
+
+```{r, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("anbuszek/DreamySleepR")
+```
+
+## Wczytanie danych
+
+Zbior danych `mcda_dane_surowe` zawiera oceny 15 ekspertow dla trzech
+aplikacji do monitorowania snu wedlug osmiu kryteriow.
+
+```{r}
+data("mcda_dane_surowe")
+head(mcda_dane_surowe, 9)
+```
+
+```{r}
+str(mcda_dane_surowe)
+```
+
+## Definicja modelu badawczego
+
+Analiza obejmuje osiem kryteriow decyzyjnych:
+
+| Kryterium                  | Typ    | Opis                                         |
+|----------------------------|--------|----------------------------------------------|
+| Dokladnosc faz snu         | max    | Dokladnosc monitorowania faz snu             |
+| Analiza statystyk          | max    | Jakosc analiz statystycznych snu             |
+| Latwosc obslugi            | max    | Intuicyjnosc interfejsu uzytkownika          |
+| Dane fizjologiczne         | max    | Zakres danych fizjologicznych (tetno, oddech)|
+| Integracja z urzadzeniami  | max    | Kompatybilnosc ze smartwatchami/opaskami     |
+| Funkcje dodatkowe          | max    | Budzik, wykrywanie chrapania itp.            |
+| Zuzycie baterii            | min    | Zuzycie energii przez aplikacje               |
+| Cena / subskrypcja         | min    | Koszt korzystania z aplikacji                 |
+
+Skadnia modelu okresla mapowanie zmiennych surowych na kryteria:
+
+```{r}
+skladnia <- "
+  Dokladnosc =~ dokladnosc_faz_snu;
+  Analiza =~ analiza_statystyk;
+  UX =~ ux_latwosc;
+  Fizjologia =~ dane_fizjologiczne;
+  Integracja =~ integracja_urzadzenia;
+  Funkcje =~ funkcje_dodatkowe;
+  Bateria =~ zuzycie_baterii;
+  Cena =~ cena_subskrypcja
+"
+```
+
+## Rozmywanie danych
+
+Funkcja `przygotuj_dane_mcda()` przeksztalca surowe dane ankietowe
+w rozmyta macierz decyzyjna. Kazda ocena jest zamieniana na trojkatna
+liczbe rozmyta (TFN) o postaci (l, m, u), gdzie l = x - 1, m = x, u = x + 1.
+
+```{r}
+dane_rozmyte <- przygotuj_dane_mcda(
+  dane = mcda_dane_surowe,
+  skladnia = skladnia,
+  kolumna_alternatyw = "Aplikacja"
 )
 
-# Ładujemy pakiet
+dane_rozmyte
+```
+
+Wizualizacja przykladowych trojkatnych liczb rozmytych:
+
+```{r, fig.width = 8, fig.height = 5}
+DreamySleepR:::.wykres_tfn()
+```
+
+## Wyznaczanie wag BWM
+
+Metoda Best-Worst Method (BWM) wyznacza wagi kryteriow na podstawie
+porownan parytetowych. Uzytkownik wskazuje kryterium najlepsze i najgorsze,
+a nastepnie ocenia odleglosc preferencji miedzy nimi a pozostalymi.
+
+Kryterium najlepsze: **Dokladnosc faz snu** (najwazniejsze dla monitorowania snu).
+Kryterium najgorsze: **Cena / subskrypcja** (najmniej wazne przy wyborze aplikacji).
+
+```{r}
+kryteria <- c(
+  "Dokladnosc", "Analiza", "UX", "Fizjologia",
+  "Integracja", "Funkcje", "Bateria", "Cena"
+)
+
+najlepsze_do_innych <- c(1, 2, 3, 2, 2, 2, 4, 5)
+inne_do_najgorszego <- c(5, 4, 3, 4, 4, 4, 2, 1)
+
+wynik_bwm <- oblicz_wagi_bwm(
+  nazwy_kryteriow = kryteria,
+  najlepsze_do_innych = najlepsze_do_innych,
+  inne_do_najgorszego = inne_do_najgorszego
+)
+```
+
+```{r}
+data.frame(
+  Kryterium = kryteria,
+  Waga = round(wynik_bwm$wagi_kryteriow, 4)
+)
+```
+
+Wskaznik spójnosci (CR) dla porownan BWM:
+
+```{r}
+cat("CR =", round(wynik_bwm$wskaznik_spojnosci, 4), "\n")
+```
+
+Wizualizacja wag:
+
+```{r, fig.width = 8, fig.height = 5}
+DreamySleepR:::.wykres_bwm(wynik_bwm)
+```
+
+## Meta-ranking
+
+Funkcja `rozmyty_meta_ranking()` agreguje wyniki trzech metod:
+Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy MULTIMOORA.
+Kazda metoda generuje wlasny ranking, a nastepnie rankingi sa agregowane
+suma rang, teoria dominacji oraz metoda konsensusu (RankAggreg).
+
+```{r}
+typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
+
+macierz <- as.matrix(dane_rozmyte)
+
+wynik_meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  bwm_kryteria = kryteria,
+  bwm_najlepsze = najlepsze_do_innych,
+  bwm_najgorsze = inne_do_najgorszego
+)
+```
+
+### Porownanie rankingow
+
+Tabela porownawcza pokazuje rangi kazdej metody oraz trzy wersje meta-rankingu:
+
+```{r}
+knitr::kable(
+  wynik_meta$porownanie,
+  caption = "Porownanie rankingow oraz wynik koncowego konsensusu"
+)
+```
+
+### Korelacje miedzy metodami
+
+Macierz korelacji rang Spearmana:
+
+```{r}
+knitr::kable(
+  round(wynik_meta$korelacje, 3),
+  caption = "Korelacje rang Spearmana miedzy metodami"
+)
+```
+
+### Wizualizacja meta-rankingu
+
+```{r, fig.width = 8, fig.height = 5}
+plot(wynik_meta)
+```
+
+## Odtworzenie analizy
+
+Aby odtworzyc pelna analize:
+
+```{r, eval = FALSE}
 library(DreamySleepR)
+
+data("mcda_dane_surowe")
+
+dane_rozmyte <- przygotuj_dane_mcda(
+  dane = mcda_dane_surowe,
+  skladnia = "
+    Dokladnosc =~ dokladnosc_faz_snu;
+    Analiza =~ analiza_statystyk;
+    UX =~ ux_latwosc;
+    Fizjologia =~ dane_fizjologiczne;
+    Integracja =~ integracja_urzadzenia;
+    Funkcje =~ funkcje_dodatkowe;
+    Bateria =~ zuzycie_baterii;
+    Cena =~ cena_subskrypcja
+  ",
+  kolumna_alternatyw = "Aplikacja"
+)
+
+macierz <- as.matrix(dane_rozmyte)
+
+typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
+
+wynik_meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz,
+  typy_kryteriow = typy_kryteriow,
+  bwm_kryteria = kryteria,
+  bwm_najlepsze = c(1, 2, 3, 2, 2, 2, 4, 5),
+  bwm_najgorsze = c(5, 4, 3, 4, 4, 4, 2, 1)
+)
+
+print(wynik_meta$porownanie)
+plot(wynik_meta)
+```
