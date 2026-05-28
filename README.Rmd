@@ -96,8 +96,8 @@ kryteria <- c(
   "Integracja", "Funkcje", "Bateria", "Cena"
 )
 
-najlepsze_do_innych <- c(1, 2, 3, 2, 2, 2, 4, 5)
-inne_do_najgorszego <- c(5, 4, 3, 4, 4, 4, 2, 1)
+najlepsze_do_innych <- c(3, 4, 2, 3, 2, 3, 5, 1)
+inne_do_najgorszego <- c(3, 2, 4, 3, 4, 3, 1, 5)
 
 wynik_bwm <- oblicz_wagi_bwm(
   nazwy_kryteriow = kryteria,

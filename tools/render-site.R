@@ -40,8 +40,8 @@ skladnia <- "
 kryteria <- c("Dokladnosc", "Analiza", "UX", "Fizjologia", "Integracja", "Funkcje", "Bateria", "Cena")
 typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
 
-najlepsze_do_innych <- c(1, 2, 3, 2, 2, 2, 4, 5)
-inne_do_najgorszego <- c(5, 4, 3, 4, 4, 4, 2, 1)
+najlepsze_do_innych <- c(3, 4, 2, 3, 2, 3, 5, 1)
+inne_do_najgorszego <- c(3, 2, 4, 3, 4, 3, 1, 5)
 
 dane_rozmyte <- przygotuj_dane_mcda(
   dane = mcda_dane_surowe,
@@ -688,7 +688,7 @@ site_html <- paste0(
         <div class="section-label">SEKCJA 4</div>
         <h3>Wagi kryteriów</h3>
         <p>Wagi kryteriów zostały wyznaczone metodą Best-Worst Method (BWM).</p>
-        <p>W przykładowej analizie za najważniejsze kryterium uznano dokładność pomiaru snu.</p>
+        <p>W przykładowej analizie za najważniejsze kryterium uznano cenę/subskrypcję, a także łatwość obsługi (UX) i integrację z urządzeniami.</p>
         <div class="info-boxes" style="grid-template-columns: repeat(4, 1fr); margin-top: 18px;">
           ', wagi_html, '
         </div>

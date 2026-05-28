@@ -50,35 +50,35 @@ data("mcda_dane_surowe")
 
 head(mcda_dane_surowe, 9)
 #>   EkspertID Aplikacja dokladnosc_faz_snu analiza_statystyk ux_latwosc
-#> 1         1 AutoSleep                  5                 6          8
-#> 2         2 AutoSleep                  1                 6          6
-#> 3         3 AutoSleep                  8                 8          7
+#> 1         1 AutoSleep                  6                 7          8
+#> 2         2 AutoSleep                  1                 7          6
+#> 3         3 AutoSleep                  9                 9          7
 #> 4         4 AutoSleep                  9                 9          9
-#> 5         5 AutoSleep                  2                 7          9
-#> 6         6 AutoSleep                  7                 6          9
-#> 7         7 AutoSleep                  9                 3          7
-#> 8         8 AutoSleep                  6                 6          9
-#> 9         9 AutoSleep                  9                 5          5
+#> 5         5 AutoSleep                  1                 8          9
+#> 6         6 AutoSleep                  8                 7          9
+#> 7         7 AutoSleep                  9                 4          7
+#> 8         8 AutoSleep                  7                 7          9
+#> 9         9 AutoSleep                  9                 6          5
 #>   dane_fizjologiczne integracja_urzadzenia funkcje_dodatkowe zuzycie_baterii
-#> 1                  5                     5                 6               9
-#> 2                  6                     7                 5               9
-#> 3                  9                     5                 8               6
-#> 4                  3                     2                 8               6
-#> 5                  8                     7                 8               3
-#> 6                  3                     7                 9               1
-#> 7                  7                     4                 8               4
-#> 8                  9                     6                 9               3
-#> 9                  2                     5                 9               2
+#> 1                  6                     6                 6               9
+#> 2                  7                     8                 5               9
+#> 3                  9                     6                 8               5
+#> 4                  2                     3                 8               5
+#> 5                  9                     8                 8               2
+#> 6                  4                     8                 9               1
+#> 7                  8                     5                 8               3
+#> 8                  9                     7                 9               2
+#> 9                  3                     6                 9               1
 #>   cena_subskrypcja
-#> 1                3
+#> 1                2
 #> 2                9
 #> 3                9
 #> 4                1
 #> 5                1
-#> 6                4
+#> 6                3
 #> 7                9
-#> 8                5
-#> 9                4
+#> 8                4
+#> 9                3
 ```
 
 Przygotowanie rozmytej macierzy decyzyjnej:
@@ -103,20 +103,20 @@ dane_rozmyte <- przygotuj_dane_mcda(
 
 dane_rozmyte
 #>                              l        m        u        l        m        u
-#> AutoSleep             5.066667 6.066667 7.066667 5.133333 6.133333 7.133333
-#> Sleep as Android      6.866667 7.866667 8.866667 5.200000 6.200000 7.200000
+#> AutoSleep             5.666667 6.666667 7.666667 6.000000 7.000000 8.000000
+#> Sleep as Android      6.400000 7.400000 8.400000 4.600000 5.600000 6.600000
 #> Garmin Sleep Advanced 5.200000 6.200000 7.200000 2.933333 3.933333 4.933333
 #>                              l        m        u        l        m        u
-#> AutoSleep             7.000000 8.000000 9.000000 3.580952 4.580952 5.580952
-#> Sleep as Android      4.000000 5.000000 6.000000 4.952381 5.952381 6.952381
+#> AutoSleep             7.000000 8.000000 9.000000 4.419048 5.419048 6.419048
+#> Sleep as Android      4.000000 5.000000 6.000000 4.038095 5.038095 6.038095
 #> Garmin Sleep Advanced 5.133333 6.133333 7.133333 3.733333 4.733333 5.733333
 #>                              l        m        u        l        m        u
-#> AutoSleep             4.933333 5.933333 6.933333 6.266667 7.266667 8.266667
-#> Sleep as Android      3.066667 4.066667 5.066667 5.133333 6.133333 7.133333
+#> AutoSleep             5.800000 6.800000 7.800000 6.266667 7.266667 8.266667
+#> Sleep as Android      3.066667 4.066667 5.066667 4.466667 5.466667 6.466667
 #> Garmin Sleep Advanced 6.466667 7.466667 8.466667 3.400000 4.400000 5.400000
 #>                              l        m        u        l        m        u
-#> AutoSleep             3.200000 4.200000 5.200000 3.333333 4.333333 5.333333
-#> Sleep as Android      3.133333 4.133333 5.133333 4.400000 5.400000 6.400000
+#> AutoSleep             2.533333 3.533333 4.533333 2.733333 3.733333 4.733333
+#> Sleep as Android      3.866667 4.866667 5.866667 4.400000 5.400000 6.400000
 #> Garmin Sleep Advanced 6.600000 7.600000 8.600000 5.933333 6.933333 7.933333
 #> attr(,"nazwy_kryteriow")
 #> [1] "Dokladnosc" "Analiza"    "UX"         "Fizjologia" "Integracja"
@@ -131,8 +131,8 @@ kryteria <- c(
   "Integracja", "Funkcje", "Bateria", "Cena"
 )
 
-najlepsze_do_innych <- c(1, 2, 3, 2, 2, 2, 4, 5)
-inne_do_najgorszego <- c(5, 4, 3, 4, 4, 4, 2, 1)
+najlepsze_do_innych <- c(3, 4, 2, 3, 2, 3, 5, 1)
+inne_do_najgorszego <- c(3, 2, 4, 3, 4, 3, 1, 5)
 
 wynik_bwm <- oblicz_wagi_bwm(
   nazwy_kryteriow = kryteria,
@@ -145,14 +145,14 @@ data.frame(
   Waga = round(wynik_bwm$wagi_kryteriow, 4)
 )
 #>    Kryterium   Waga
-#> 1 Dokladnosc 0.2432
-#> 2    Analiza 0.1384
-#> 3         UX 0.0922
-#> 4 Fizjologia 0.1384
-#> 5 Integracja 0.1384
-#> 6    Funkcje 0.1384
-#> 7    Bateria 0.0692
-#> 8       Cena 0.0419
+#> 1 Dokladnosc 0.1016
+#> 2    Analiza 0.0762
+#> 3         UX 0.1524
+#> 4 Fizjologia 0.1016
+#> 5 Integracja 0.1524
+#> 6    Funkcje 0.1016
+#> 7    Bateria 0.0462
+#> 8       Cena 0.2679
 ```
 
 ## Meta-ranking
@@ -176,8 +176,8 @@ wynik_meta <- rozmyty_meta_ranking(
 
 wynik_meta$porownanie
 #>             Alternatywa R_VIKOR R_TOPSIS R_MULTIMOORA Meta_Suma Meta_Dominacja
-#> 1             AutoSleep       2        1            1         1              1
-#> 2      Sleep as Android       1        2            2         2              2
+#> 1             AutoSleep       1        1            1         1              1
+#> 2      Sleep as Android       2        2            2         2              2
 #> 3 Garmin Sleep Advanced       3        3            3         3              3
 #>   Meta_Agregacja
 #> 1              1

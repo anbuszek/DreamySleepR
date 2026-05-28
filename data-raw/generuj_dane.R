@@ -3,14 +3,14 @@ set.seed(2026)
 aplikacje <- c("AutoSleep", "Sleep as Android", "Garmin Sleep Advanced")
 
 profil_jakosci <- data.frame(
-  dokladnosc_faz_snu = c(7, 8, 5),
-  analiza_statystyk = c(6, 7, 4),
+  dokladnosc_faz_snu = c(8, 7, 5),
+  analiza_statystyk = c(7, 6, 4),
   ux_latwosc = c(8, 5, 5),
-  dane_fizjologiczne = c(5, 6, 4),
-  integracja_urzadzenia = c(5, 4, 8),
-  funkcje_dodatkowe = c(7, 6, 5),
-  zuzycie_baterii = c(5, 4, 8),
-  cena_subskrypcja = c(4, 5, 7),
+  dane_fizjologiczne = c(6, 5, 4),
+  integracja_urzadzenia = c(6, 4, 8),
+  funkcje_dodatkowe = c(7, 5, 5),
+  zuzycie_baterii = c(4, 5, 8),
+  cena_subskrypcja = c(3, 5, 7),
   row.names = aplikacje
 )
 
