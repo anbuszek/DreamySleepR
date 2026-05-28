@@ -5,19 +5,19 @@
 
 <!-- badges: end -->
 
-**DreamySleepR** to pakiet w jezyku R sluzy do oceny i rankingu
-aplikacji do monitorowania snu dla studentow z wykorzystaniem metod
-wielokryterialnych w srodowisku rozmytym (Fuzzy MCDA).
+**DreamySleepR** to pakiet w języku R służący do oceny i rankingu
+aplikacji do monitorowania snu dla studentów z wykorzystaniem metod
+wielokryterialnych w środowisku rozmytym (Fuzzy MCDA).
 
-Pakiet stanowi narzedzie badawcze opracowane na potrzeby pracy
+Pakiet stanowi narzędzie badawcze opracowane na potrzeby pracy
 licencjackiej:
 
 **„DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania
-snu studentow z wykorzystaniem metod Fuzzy TOPSIS, Fuzzy VIKOR i Fuzzy
+snu studentów z wykorzystaniem metod Fuzzy TOPSIS, Fuzzy VIKOR i Fuzzy
 MULTIMOORA.”**
 
-Umozliwia on pelna sciezke analityczna: od danych eksperckich, przez ich
-agregacje w postaci rozmytej, az po wyznaczenie rankingow metodami
+Umożliwia on pełną ścieżkę analityczną: od danych eksperckich, przez ich
+agregację w postaci rozmytej, aż po wyznaczenie rankingów metodami
 **Fuzzy TOPSIS**, **Fuzzy VIKOR**, **Fuzzy MULTIMOORA** oraz ich
 **meta-rankingu (konsensusu)**.
 
@@ -25,13 +25,13 @@ agregacje w postaci rozmytej, az po wyznaczenie rankingow metodami
 
 ## Funkcje pakietu
 
-- przygotowanie i agregacje **rozmytych ocen ekspertow** (TFN)
-- obsluge danych dla 3 alternatyw, 8 kryteriow, 15 ekspertow
-- wyznaczanie wag kryteriow metoda **BWM** (Best-Worst Method)
-- **rozmyty_meta_ranking()** - agregacje wynikow TOPSIS, VIKOR,
+- przygotowanie i agregacja **rozmytych ocen ekspertów** (TFN)
+- obsługa danych dla 3 alternatyw, 8 kryteriów, 15 ekspertów
+- wyznaczanie wag kryteriów metodą **BWM** (Best-Worst Method)
+- **rozmyty_meta_ranking()** - agregacja wyników TOPSIS, VIKOR,
   MULTIMOORA
 - **tabela_apa()** - generowanie tabel gotowych do raportowania
-- **wizualizacje wynikow** rankingow i porownan
+- **wizualizacja wyników** rankingów i porównań
 
 ------------------------------------------------------------------------
 
@@ -123,7 +123,7 @@ dane_rozmyte
 #> [6] "Funkcje"    "Bateria"    "Cena"
 ```
 
-Wagi kryteriow metoda BWM:
+Wagi kryteriów metodą BWM:
 
 ``` r
 kryteria <- c(
@@ -157,7 +157,7 @@ data.frame(
 
 ## Meta-ranking
 
-Agregacja wynikow trzech metod w ranking konsensusu:
+Agregacja wyników trzech metod w ranking konsensusu:
 
 ``` r
 typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
@@ -215,7 +215,7 @@ tabela_apa(wynik_meta)
 
 ## Dokumentacja
 
-Pelna instrukcja krok po kroku:
+Pełna instrukcja krok po kroku:
 
 ``` r
 vignette("poradnik_mcda", package = "DreamySleepR")

@@ -1,8 +1,8 @@
 ---
-title: "Pelen proces analizy: Od danych do rankingu"
+title: "Pełny proces analizy: Od danych do rankingu"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Pelen proces analizy: Od danych do rankingu}
+  %\VignetteIndexEntry{Pełny proces analizy: Od danych do rankingu}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,13 +20,13 @@ library(DreamySleepR)
 
 ## Wprowadzenie
 
-Pakiet **DreamySleepR** sluzy do oceny i rankingu aplikacji do monitorowania snu
-z wykorzystaniem metod wielokryterialnej analizy decyzyjnej (MCDA) w srodowisku rozmytym.
+Pakiet **DreamySleepR** służy do oceny i rankingu aplikacji do monitorowania snu
+z wykorzystaniem metod wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym.
 
-Paket implementuje pelna sciezke analityczna: od danych eksperckich, przez
-ich agregacje w postaci rozmytej (trojkatne liczby rozmyte TFN), az po
-wyznaczanie wag metoda Best-Worst Method (BWM) i koncowy meta-ranking
-agregujacy wyniki metod Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy MULTIMOORA.
+Pakiet implementuje pełną ścieżkę analityczną: od danych eksperckich, przez
+ich agregację w postaci rozmytej (trójkątne liczby rozmyte TFN), aż po
+wyznaczanie wag metodą Best-Worst Method (BWM) i końcowy meta-ranking
+agregujący wyniki metod Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy MULTIMOORA.
 
 ## Instalacja
 
@@ -37,8 +37,8 @@ devtools::install_github("anbuszek/DreamySleepR")
 
 ## Wczytanie danych
 
-Zbior danych `mcda_dane_surowe` zawiera oceny 15 ekspertow dla trzech
-aplikacji do monitorowania snu wedlug osmiu kryteriow.
+Zbiór danych `mcda_dane_surowe` zawiera oceny 15 ekspertów dla trzech
+aplikacji do monitorowania snu według ośmiu kryteriów.
 
 ```{r}
 data("mcda_dane_surowe")
@@ -51,20 +51,20 @@ str(mcda_dane_surowe)
 
 ## Definicja modelu badawczego
 
-Analiza obejmuje osiem kryteriow decyzyjnych:
+Analiza obejmuje osiem kryteriów decyzyjnych:
 
 | Kryterium                  | Typ    | Opis                                         |
 |----------------------------|--------|----------------------------------------------|
-| Dokladnosc faz snu         | max    | Dokladnosc monitorowania faz snu             |
-| Analiza statystyk          | max    | Jakosc analiz statystycznych snu             |
-| Latwosc obslugi            | max    | Intuicyjnosc interfejsu uzytkownika          |
-| Dane fizjologiczne         | max    | Zakres danych fizjologicznych (tetno, oddech)|
-| Integracja z urzadzeniami  | max    | Kompatybilnosc ze smartwatchami/opaskami     |
+| Dokładność faz snu         | max    | Dokładność monitorowania faz snu             |
+| Analiza statystyk          | max    | Jakość analiz statystycznych snu             |
+| Łatwość obsługi            | max    | Intuicyjność interfejsu użytkownika          |
+| Dane fizjologiczne         | max    | Zakres danych fizjologicznych (tętno, oddech)|
+| Integracja z urządzeniami  | max    | Kompatybilność ze smartwatchami/opaskami     |
 | Funkcje dodatkowe          | max    | Budzik, wykrywanie chrapania itp.            |
-| Zuzycie baterii            | min    | Zuzycie energii przez aplikacje               |
-| Cena / subskrypcja         | min    | Koszt korzystania z aplikacji                 |
+| Zużycie baterii            | min    | Zużycie energii przez aplikację              |
+| Cena / subskrypcja         | min    | Koszt korzystania z aplikacji                |
 
-Skadnia modelu okresla mapowanie zmiennych surowych na kryteria:
+Składnia modelu określa mapowanie zmiennych surowych na kryteria:
 
 ```{r}
 skladnia <- "
@@ -81,9 +81,9 @@ skladnia <- "
 
 ## Rozmywanie danych
 
-Funkcja `przygotuj_dane_mcda()` przeksztalca surowe dane ankietowe
-w rozmyta macierz decyzyjna. Kazda ocena jest zamieniana na trojkatna
-liczbe rozmyta (TFN) o postaci (l, m, u), gdzie l = x - 1, m = x, u = x + 1.
+Funkcja `przygotuj_dane_mcda()` przekształca surowe dane ankietowe
+w rozmytą macierz decyzyjną. Każda ocena jest zamieniana na trójkątną
+liczbę rozmytą (TFN) o postaci (l, m, u), gdzie l = x - 1, m = x, u = x + 1.
 
 ```{r}
 dane_rozmyte <- przygotuj_dane_mcda(
@@ -95,7 +95,7 @@ dane_rozmyte <- przygotuj_dane_mcda(
 dane_rozmyte
 ```
 
-Wizualizacja przykladowych trojkatnych liczb rozmytych:
+Wizualizacja przykładowych trójkątnych liczb rozmytych:
 
 ```{r, fig.width = 8, fig.height = 5}
 DreamySleepR:::.wykres_tfn()
@@ -103,12 +103,12 @@ DreamySleepR:::.wykres_tfn()
 
 ## Wyznaczanie wag BWM
 
-Metoda Best-Worst Method (BWM) wyznacza wagi kryteriow na podstawie
-porownan parytetowych. Uzytkownik wskazuje kryterium najlepsze i najgorsze,
-a nastepnie ocenia odleglosc preferencji miedzy nimi a pozostalymi.
+Metoda Best-Worst Method (BWM) wyznacza wagi kryteriów na podstawie
+porównań parytetowych. Użytkownik wskazuje kryterium najlepsze i najgorsze,
+a następnie ocenia odległość preferencji między nimi a pozostałymi.
 
-Kryterium najlepsze: **Cena / subskrypcja** (najwazniejsze ze wzgledu na budzet studentow).
-Kryterium najgorsze: **Zuzycie baterii** (najmniej wazne przy krótko-/średnioterminowym monitorowaniu snu).
+Kryterium najlepsze: **Cena / subskrypcja** (najważniejsze ze względu na budżet studentów).
+Kryterium najgorsze: **Zużycie baterii** (najmniej ważne przy krótko-/średnioterminowym monitorowaniu snu).
 
 ```{r}
 kryteria <- c(
@@ -133,7 +133,7 @@ data.frame(
 )
 ```
 
-Wskaznik spójnosci (CR) dla porownan BWM:
+Wskaźnik spójności (CR) dla porównań BWM:
 
 ```{r}
 cat("CR =", round(wynik_bwm$wskaznik_spojnosci, 4), "\n")
@@ -149,8 +149,8 @@ DreamySleepR:::.wykres_bwm(wynik_bwm)
 
 Funkcja `rozmyty_meta_ranking()` agreguje wyniki trzech metod:
 Fuzzy TOPSIS, Fuzzy VIKOR oraz Fuzzy MULTIMOORA.
-Kazda metoda generuje wlasny ranking, a nastepnie rankingi sa agregowane
-suma rang, teoria dominacji oraz metoda konsensusu (RankAggreg).
+Każda metoda generuje własny ranking, a następnie rankingi są agregowane
+sumą rang, teorią dominacji oraz metodą konsensusu (RankAggreg).
 
 ```{r}
 typy_kryteriow <- c("max", "max", "max", "max", "max", "max", "min", "min")
@@ -166,25 +166,25 @@ wynik_meta <- rozmyty_meta_ranking(
 )
 ```
 
-### Porownanie rankingow
+### Porównanie rankingów
 
-Tabela porownawcza pokazuje rangi kazdej metody oraz trzy wersje meta-rankingu:
+Tabela porównawcza pokazuje rangi każdej metody oraz trzy wersje meta-rankingu:
 
 ```{r}
 knitr::kable(
   wynik_meta$porownanie,
-  caption = "Porownanie rankingow oraz wynik koncowego konsensusu"
+  caption = "Porównanie rankingów oraz wynik końcowego konsensusu"
 )
 ```
 
-### Korelacje miedzy metodami
+### Korelacje między metodami
 
 Macierz korelacji rang Spearmana:
 
 ```{r}
 knitr::kable(
   round(wynik_meta$korelacje, 3),
-  caption = "Korelacje rang Spearmana miedzy metodami"
+  caption = "Korelacje rang Spearmana między metodami"
 )
 ```
 
@@ -196,7 +196,7 @@ plot(wynik_meta)
 
 ## Odtworzenie analizy
 
-Aby odtworzyc pelna analize:
+Aby odtworzyć pełną analizę:
 
 ```{r, eval = FALSE}
 library(DreamySleepR)
