@@ -1,7 +1,7 @@
 Package: DreamySleepR
 Type: Package
 Title: DreamySleepR: Pakiet R do oceny i rankingu aplikacji do monitorowania snu studentow
-Version: 0.1.0
+Version: 0.3.4
 Author: Anna Buszek <an.buszek@student.uj.edu.pl>
 Maintainer: Anna Buszek <an.buszek@student.uj.edu.pl>
 Description: Pakiet implementuje metody wielokryterialnej analizy decyzyjnej (MCDA),

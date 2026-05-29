@@ -1,33 +1,40 @@
-set.seed(123)
+set.seed(2026)
 
-aplikacje <- c(
-  "AutoSleep",
-  "Sleep_as_Android",
-  "Garmin_Sleep_Advanced"
+aplikacje <- c("AutoSleep", "Sleep as Android", "Garmin Sleep Advanced")
+
+profil_jakosci <- data.frame(
+  dokladnosc_faz_snu = c(8, 7, 5),
+  analiza_statystyk = c(7, 6, 4),
+  ux_latwosc = c(8, 5, 5),
+  dane_fizjologiczne = c(6, 5, 4),
+  integracja_urzadzenia = c(6, 4, 8),
+  funkcje_dodatkowe = c(7, 5, 5),
+  zuzycie_baterii = c(4, 5, 8),
+  cena_subskrypcja = c(3, 5, 7),
+  row.names = aplikacje
 )
 
+skala <- 1.5
+
 dane <- expand.grid(
-  EkspertID = 1:6,
+  EkspertID = 1:15,
   Aplikacja = aplikacje
 )
 
 n <- nrow(dane)
 
-dane$dokladnosc_faz_snu <- sample(1:5, n, replace = TRUE)
+kryteria <- names(profil_jakosci)
 
-dane$analiza_statystyk <- sample(1:5, n, replace = TRUE)
-
-dane$ux_latwosc <- sample(1:5, n, replace = TRUE)
-
-dane$dane_fizjologiczne <- sample(1:5, n, replace = TRUE)
-
-dane$integracja_urzadzenia <- sample(1:5, n, replace = TRUE)
-
-dane$funkcje_dodatkowe <- sample(1:5, n, replace = TRUE)
-
-dane$zuzycie_baterii <- sample(1:5, n, replace = TRUE)
-
-dane$cena_subskrypcja <- sample(1:5, n, replace = TRUE)
+for (kryt in kryteria) {
+  wartosci <- numeric(n)
+  for (i in seq_len(n)) {
+    apka <- as.character(dane$Aplikacja[i])
+    srodek <- profil_jakosci[apka, kryt]
+    surowa <- abs(rcauchy(1, location = srodek, scale = skala))
+    wartosci[i] <- round(min(max(surowa, 1), 9))
+  }
+  dane[[kryt]] <- wartosci
+}
 
 mcda_dane_surowe <- dane
 

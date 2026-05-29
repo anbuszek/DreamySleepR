@@ -121,13 +121,11 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
     stop("Długość `typy_kryteriow` musi być równa liczbie kryteriów.")
   }
   
-  # 1. Wyznaczanie wag
   if (is.null(wagi) && (is.null(bwm_najlepsze) || is.null(bwm_najgorsze))) {
     message("Brak wag i parametrów BWM. Obliczam wagi metodą entropii...")
     wagi <- oblicz_wagi_entropii(macierz_decyzyjna)
   }
   
-  # 2. Przygotowanie wspólnej listy argumentów
   args_baza <- list(
     macierz_decyzyjna = macierz_decyzyjna,
     typy_kryteriow = typy_kryteriow
@@ -151,14 +149,12 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
     args_baza$bwm_najgorsze <- bwm_najgorsze
   }
   
-  # 3. Uruchomienie metod cząstkowych
   args_vikor <- c(args_baza, list(v = v))
   
   res_vikor <- do.call(rozmyty_vikor, args_vikor)
   res_topsis <- do.call(rozmyty_topsis, args_baza)
   res_multimoora <- do.call(rozmyty_multimoora, args_baza)
   
-  # 4. Ekstrakcja rankingów
   r_vikor <- res_vikor$wyniki$Ranking
   r_topsis <- res_topsis$wyniki$Ranking
   r_multimoora <- res_multimoora$wyniki$Ranking
@@ -167,18 +163,15 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
     stop("Każda metoda musi zwracać kolumnę `Ranking` w elemencie `wyniki`.")
   }
   
-  # 5A. Agregacja przez sumę rang
   suma_pkt <- r_vikor + r_topsis + r_multimoora
   ranking_suma <- rank(suma_pkt, ties.method = "first")
   
-  # 5B. Agregacja przez dominację
   ranking_dominacja <- .oblicz_ranking_dominacji(
     r_vikor,
     r_topsis,
     r_multimoora
   )
   
-  # 5C. Agregacja przez RankAggreg
   macierz_dla_ra <- rbind(
     order(r_vikor),
     order(r_topsis),
@@ -211,13 +204,11 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
     wektor_ra[indeks_alternatywy] <- pozycja
   }
   
-  # 6. Nazwy alternatyw
   alternatywy <- rownames(macierz_decyzyjna)
   if (is.null(alternatywy)) {
     alternatywy <- paste0("A", seq_len(n_alt))
   }
   
-  # 7. Zestawienie wyników
   porownanie_df <- data.frame(
     Alternatywa = alternatywy,
     R_VIKOR = r_vikor,
