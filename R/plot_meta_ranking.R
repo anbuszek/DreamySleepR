@@ -8,7 +8,7 @@ plot.rozmyty_meta_ranking_wynik <- function(
   df <- x$porownanie
   
   if (!metoda %in% colnames(df)) {
-    stop("Niepoprawna metoda meta-rankingu.")
+    stop("Niepoprawna metoda metarankingu.")
   }
   
   df$Wynik <- df[[metoda]]
@@ -34,7 +34,7 @@ plot.rozmyty_meta_ranking_wynik <- function(
     ggplot2::coord_flip() +
     
     ggplot2::labs(
-      title = "Meta-ranking aplikacji",
+      title = "Metaranking aplikacji",
       subtitle = paste("Metoda:", metoda),
       x = "Alternatywa",
       y = "Pozycja rankingowa"

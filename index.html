@@ -395,6 +395,19 @@
     padding:50px 0;
     font-size:14px;
   }
+  .visual-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:24px;
+  margin-top:28px;
+  align-items:start;
+}
+
+.visual-card{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
   
   @media(max-width:1200px){
     .two-cols{
@@ -631,12 +644,12 @@
             </tbody>
           </table>
         </div>
-        <img src="man/figures/README-meta-1.png" class="chart-img" alt="Wykres meta-rankingu">
+        <img src="man/figures/README-meta-1.png" class="chart-img" alt="Wykres metarankingu">
       </section>
 
     </div>
     <section class="section" id="wizualizacje">
-      <div class="section-label">SEKCJA 7</div>
+      <div class="section-label">SEKCJA 6</div>
       <h3>Wizualizacja wyników</h3>
       <p>
         Poniższe wykresy przedstawiają graficzną interpretację wyników uzyskanych
@@ -646,8 +659,8 @@
       <div class="visual-grid">
     
         <div class="visual-card">
-          <h4>Fuzzy TOPSIS — mapa decyzyjna</h4>
-          <img src="man/figures/README-topsis-1.png" class="visual-img" alt="Wizualizacja Fuzzy TOPSIS">
+          <h4>Mapa decyzyjna Fuzzy TOPSIS</h4>
+          <img src="man/figures/Mapa_decyzyjna_Fuzzy_TOPSIS.png" class="visual-img" alt="Mapa decyzyjna Fuzzy TOPSIS">
           <p>
             Wykres pokazuje położenie aplikacji względem rozwiązania idealnego i antyidealnego.
             Im bliżej ideału znajduje się alternatywa, tym lepszy wynik uzyskuje w metodzie TOPSIS.
@@ -655,8 +668,8 @@
         </div>
     
         <div class="visual-card">
-          <h4>Fuzzy VIKOR — rozwiązanie kompromisowe</h4>
-          <img src="man/figures/README-vikor-1.png" class="visual-img" alt="Wizualizacja Fuzzy VIKOR">
+          <h4>Mapa decyzyjna Fuzzy VIKOR</h4>
+          <img src="man/figures/Mapa_decyzyjna_Fuzzy_VIKOR.png" class="visual-img" alt="Mapa decyzyjna Fuzzy VIKOR">
           <p>
             Wykres prezentuje ocenę kompromisową alternatyw. Metoda VIKOR pozwala wskazać
             rozwiązanie, które najlepiej równoważy wynik grupowy oraz indywidualny żal decyzyjny.
@@ -664,8 +677,8 @@
         </div>
     
         <div class="visual-card">
-          <h4>Fuzzy MULTIMOORA — porównanie alternatyw</h4>
-          <img src="man/figures/README-multimoora-1.png" class="visual-img" alt="Wizualizacja Fuzzy MULTIMOORA">
+          <h4>Mapa decyzyjna Fuzzy MULTIMOORA</h4>
+          <img src="man/figures/Mapa_decyzyjna_Fuzzy_Multimoora.png" class="visual-img" alt="Mapa decyzyjna Fuzzy MULTIMOORA">
           <p>
             Wykres pokazuje wynik alternatyw ocenianych z kilku perspektyw obliczeniowych.
             MULTIMOORA wzmacnia interpretację rankingu przez połączenie kilku sposobów porównania.
@@ -675,13 +688,18 @@
       </div>
     </section>
     <section class="section" id="odtworzenie">
-      <div class="section-label">SEKCJA 6</div>
+      <div class="section-label">SEKCJA 7</div>
       <h3>Jak odtworzyć analizę? - krok po kroku</h3>
       <p>Poniższa instrukcja przeprowadza użytkownika przez pełną analizę z wykorzystaniem demonstracyjnego zbioru danych.</p>
 <pre>
+# Wczytanie pakietu
+library(DreamySleepR)
+
+# Wczytanie danych przykładowych
 data("mcda_dane_surowe")
 
-dane_rozmyte &lt;- przygotuj_dane_mcda(
+# Przygotowanie danych do analizy MCDA
+dane_rozmyte <- przygotuj_dane_mcda(
   dane = mcda_dane_surowe,
   skladnia = "
     Dokladnosc =~ dokladnosc_faz_snu;
@@ -696,22 +714,61 @@ dane_rozmyte &lt;- przygotuj_dane_mcda(
   kolumna_alternatyw = "Aplikacja"
 )
 
-macierz &lt;- as.matrix(dane_rozmyte)
+# Konwersja danych rozmytych do macierzy 
+macierz <- as.matrix(dane_rozmyte)
 
-typy &lt;- c(
-  "max", "max", "max", "max",
-  "max", "max", "min", "min"
+# Określenie typów kryteriów 
+typy <- c( 
+  "max", "max", "max", "max", 
+  "max", "max", "min", "min" 
 )
 
-wynik &lt;- rozmyty_meta_ranking(
-  macierz_decyzyjna = macierz,
-  typy_kryteriow = typy,
-  bwm_kryteria = c("Dokladnosc", "Analiza", "UX", "Fizjologia", "Integracja", "Funkcje", "Bateria", "Cena"),
-  bwm_najlepsze = c(1, 2, 3, 2, 2, 2, 4, 5),
-  bwm_najgorsze = c(5, 4, 3, 4, 4, 4, 2, 1)
+# Zdefiniowanie wag kryteriów 
+wagi <- c( 
+  0.102, # Dokladnosc 
+  0.076, # Analiza 
+  0.152, # UX 
+  0.102, # Fizjologia 
+  0.152, # Integracja 
+  0.102, # Funkcje 
+  0.046, # Bateria 
+  0.268 # Cena
+)
+  
+  # Uruchomienie metody Fuzzy TOPSIS 
+wynik_topsis <- rozmyty_topsis( 
+  macierz_decyzyjna = macierz, 
+  typy_kryteriow = typy, 
+  wagi = wagi 
+)
+  
+  # Uruchomienie metody Fuzzy VIKOR 
+wynik_vikor <- rozmyty_vikor( 
+  macierz_decyzyjna = macierz, 
+  typy_kryteriow = typy, 
+  wagi = wagi 
+) 
+
+# Uruchomienie metody Fuzzy MULTIMOORA 
+wynik_multimoora <- rozmyty_multimoora(
+  macierz_decyzyjna = macierz, 
+  typy_kryteriow = typy, 
+  wagi = wagi 
 )
 
-print(wynik$porownanie)
+# Wyznaczenie metarankingu 
+wynik_meta <- rozmyty_meta_ranking( 
+  macierz_decyzyjna = macierz, 
+  typy_kryteriow = typy, 
+  wagi = wagi 
+) 
+
+# Podgląd wyników 
+print(wynik_topsis) 
+print(wynik_vikor) 
+print(wynik_multimoora) 
+print(wynik_meta$porownanie)
+
 </pre>
     </section>
 
