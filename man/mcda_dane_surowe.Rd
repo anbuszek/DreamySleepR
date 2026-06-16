@@ -8,7 +8,7 @@ Ramka danych (data frame) z 18 wierszami i 10 zmiennymi:
 \describe{
 
   \item{EkspertID}{
-  Identyfikator eksperta oceniającego aplikacje (1–6).
+  Identyfikator eksperta oceniającego aplikacje (1–15).
   }
 
   \item{Aplikacja}{

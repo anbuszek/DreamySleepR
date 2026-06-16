@@ -19,7 +19,7 @@
 #' \describe{
 #'
 #'   \item{EkspertID}{
-#'   Identyfikator eksperta oceniającego aplikacje (1–6).
+#'   Identyfikator eksperta oceniającego aplikacje (1–15).
 #'   }
 #'
 #'   \item{Aplikacja}{

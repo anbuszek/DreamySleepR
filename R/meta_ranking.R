@@ -155,9 +155,19 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
   res_topsis <- do.call(rozmyty_topsis, args_baza)
   res_multimoora <- do.call(rozmyty_multimoora, args_baza)
   
-  r_vikor <- res_vikor$wyniki$Ranking
-  r_topsis <- res_topsis$wyniki$Ranking
-  r_multimoora <- res_multimoora$wyniki$Ranking
+  alternatywy <- rownames(macierz_decyzyjna)
+  
+  r_vikor <- res_vikor$wyniki$Ranking[
+    match(alternatywy, res_vikor$wyniki$Alternatywa)
+  ]
+  
+  r_topsis <- res_topsis$wyniki$Ranking[
+    match(alternatywy, res_topsis$wyniki$Alternatywa)
+  ]
+  
+  r_multimoora <- res_multimoora$wyniki$Ranking[
+    match(alternatywy, res_multimoora$wyniki$Alternatywa)
+  ]
   
   if (is.null(r_vikor) || is.null(r_topsis) || is.null(r_multimoora)) {
     stop("Każda metoda musi zwracać kolumnę `Ranking` w elemencie `wyniki`.")
