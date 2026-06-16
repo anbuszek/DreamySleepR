@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Funkcja przeksztalca wyniki analizy MCDA
-#' (TOPSIS, VIKOR, MULTIMOORA, meta-ranking)
+#' (TOPSIS, VIKOR, MULTIMOORA, metaranking)
 #' w sformatowana tabele zgodna ze standardem APA.
 #'
 #' @param x Obiekt wynikowy z funkcji pakietu.
@@ -101,10 +101,10 @@ tabela_apa.rozmyty_multimoora_wynik <- function(
 #' @export
 tabela_apa.rozmyty_meta_ranking_wynik <- function(
     x,
-    tytul = "Meta-ranking (konsensus)"
+    tytul = "Metaranking (konsensus)"
 ) {
   if (is.null(x$porownanie)) {
-    stop("To nie jest obiekt meta-rankingu.")
+    stop("To nie jest obiekt metarankingu.")
   }
   
   df <- x$porownanie

@@ -56,7 +56,7 @@
   finalny_ranking
 }
 
-#' @title Rozmyty meta-ranking alternatyw
+#' @title Rozmyty metaranking alternatyw
 #'
 #' @description
 #' Funkcja agreguje wyniki metod \emph{Fuzzy VIKOR}, \emph{Fuzzy TOPSIS}
