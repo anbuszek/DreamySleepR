@@ -20,7 +20,7 @@
 }
 
 
-#' Mapa strategiczna VIKOR
+#' Mapa decyzyjna Fuzzy VIKOR
 #'
 #' @description
 #' Wizualizacja typu cIPMA.
@@ -97,7 +97,7 @@ plot.rozmyty_vikor_wynik <- function(x, ...) {
     geom_text_repel(aes(label = Alternatywa), box.padding = 0.5) +
     scale_x_continuous(expand = expansion(mult = 0.2)) +
     labs(
-      title = "Mapa strategiczna VIKOR",
+      title = "Mapa decyzyjna Fuzzy VIKOR",
       subtitle = "Zielona strefa oznacza najlepszy kompromis.",
       x = "Indeks wydajnosci grupy (odwrocone S)",
       y = "Indeks ryzyka / zalu (R)",
@@ -108,7 +108,7 @@ plot.rozmyty_vikor_wynik <- function(x, ...) {
 }
 
 
-#' Mapa efektywnosci TOPSIS
+#' Mapa decyzyjna Fuzzy TOPSIS
 #'
 #' @description
 #' Pokazuje odleglosc od rozwiazania idealnego.
@@ -147,7 +147,7 @@ plot.rozmyty_topsis_wynik <- function(x, ...) {
     annotate("point", x = cel_x, y = cel_y, shape = 18, size = 6, color = "#FFD700") +
     annotate("text", x = cel_x, y = cel_y, label = "IDEAL", vjust = 2, size = 3.5, fontface = "bold") +
     labs(
-      title = "Mapa efektywnosci TOPSIS",
+      title = "Mapa decyzyjna Fuzzy TOPSIS",
       subtitle = "Linie przerywane pokazuja droge do rozwiazania idealnego.",
       x = "Dystans od antywzorca (D-)",
       y = "Dystans do wzorca (D+)",
@@ -158,7 +158,7 @@ plot.rozmyty_topsis_wynik <- function(x, ...) {
 }
 
 
-#' Mapa porownania skladnikow MULTIMOORA
+#' Mapa decyzyjna Fuzzy MULTIMOORA
 #'
 #' @description
 #' Wizualizacja porownuje dwa glowne skladniki wyniku MULTIMOORA:
@@ -180,7 +180,7 @@ plot.rozmyty_multimoora_wynik <- function(x, ...) {
     geom_point(aes(size = Rozmiar, fill = Ranking), shape = 21, color = "black", alpha = 0.85) +
     geom_text_repel(aes(label = Alternatywa), box.padding = 0.5) +
     labs(
-      title = "Mapa porownania skladnikow MULTIMOORA",
+      title = "Mapa decyzyjna Fuzzy MULTIMOORA",
       subtitle = "Wykres porownuje Ratio System i Full Multiplicative Form.",
       x = "Ratio System",
       y = "Full Multiplicative Form",
