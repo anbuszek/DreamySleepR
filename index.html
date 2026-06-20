@@ -228,63 +228,58 @@
     color:#374151;
     font-size:13px;
     white-space:nowrap;
+    }
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin: 2rem auto;
   }
   
-  .meta-table{
-    width:100% !important;
-    min-width:100% !important;
-    max-width:100% !important;
-    border-collapse:collapse;
-    table-layout:auto;
-    display:table;
+  .meta-table {
+    min-width: 1400px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    table-layout: auto;
   }
   
-  .meta-table thead{
-    width:100%;
+  .meta-table th,
+  .meta-table td {
+    padding: 18px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    vertical-align: middle;
   }
   
-  .meta-table tbody{
-    width:100%;
+  .meta-table th {
+    background: #f3f4f6;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: normal;      /* pozwala zawijać nagłówki */
+    word-break: break-word;
   }
   
-  .meta-table tr{
-    width:100%;
+  .meta-table td {
+    color: #374151;
   }
   
-  .meta-table th{
-    background:#f3f4f6;
-    color:#64748b;
-    text-transform:uppercase;
-    font-weight:700;
-    padding:18px;
-    border-bottom:2px solid #e5e7eb;
-    text-align:left;
-  }
-  
-  .meta-table td{
-    padding:18px;
-    border-bottom:1px solid #e5e7eb;
-    color:#374151;
-  }
-  
+  /* Miejsce w metarankingu */
   .meta-table th:nth-child(1),
-  .meta-table td:nth-child(1){
-    width:18%;
+  .meta-table td:nth-child(1) {
+    min-width: 260px;
   }
   
+  /* Nazwa aplikacji */
   .meta-table th:nth-child(2),
-  .meta-table td:nth-child(2){
-    width:38%;
+  .meta-table td:nth-child(2) {
+    min-width: 250px;
   }
   
-  .meta-table th:nth-child(3),
-  .meta-table td:nth-child(3),
-  .meta-table th:nth-child(4),
-  .meta-table td:nth-child(4),
-  .meta-table th:nth-child(5),
-  .meta-table td:nth-child(5){
-    width:14%;
-    text-align:center;
+  /* Pozostałe kolumny */
+  .meta-table th:nth-child(n+3),
+  .meta-table td:nth-child(n+3) {
+    min-width: 180px;
   }
   
   .custom-table-scroll::-webkit-scrollbar{
@@ -627,6 +622,8 @@
             <h4>Czy ranking jest stabilny?</h4>
             <p>Tak</p>
           </div>
+        </div>
+        <div class="table-wrapper">
           <table class="meta-table">
             <thead>
               <tr>
@@ -637,11 +634,10 @@
                 <th>Metoda MULTIMOORA</th>
               </tr>
             </thead>
-            
             <tbody>
-              <tr><td>1</td><td>AutoSleep</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>2</td><td>Sleep as Android</td><td>2</td><td>2</td><td>2</td></tr>
-            <tr><td>3</td><td>Garmin Sleep Advanced</td><td>3</td><td>3</td><td>3</td></tr>
+              <tr><td>1</td><td>AutoSleep</td><td>1</td><td>1</td><td>2</td></tr>
+              <tr><td>2</td><td>Sleep as Android</td><td>2</td><td>2</td><td>1</td></tr>
+              <tr><td>3</td><td>Garmin Sleep Advanced</td><td>3</td><td>3</td><td>3</td></tr>
             </tbody>
           </table>
         </div>
